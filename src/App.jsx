@@ -1228,45 +1228,50 @@ export default function App() {
         )}
 
         {/* ASISTENTE IA */}
+        {/* ASISTENTE IA */}
         {activeTab === 'ia' && (
-          <div className="max-w-3xl mx-auto h-[580px] flex flex-col bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-red-50 dark:border-slate-700 overflow-hidden animate-fadeIn">
-            <div className="bg-gradient-to-r from-red-900 to-red-800 text-white p-4 flex items-center gap-3 shadow-sm z-10">
-              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center shrink-0"><Bot className="w-6 h-6" /></div>
-              <div>
-                <h3 className="font-bold text-sm font-serif">Asistente Zhineng Qigong (IA)</h3>
-                <p className="text-[10px] text-red-100">Guía personalizada inspirada en las enseñanzas del Dr. Pang Ming</p>
+          !isRegistered ? (
+            <LockedContent title="el Asistente de IA" isEsencialOnly={false} />
+          ) : (
+            <div className="max-w-3xl mx-auto h-[580px] flex flex-col bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-red-50 dark:border-slate-700 overflow-hidden animate-fadeIn">
+              <div className="bg-gradient-to-r from-red-900 to-red-800 text-white p-4 flex items-center gap-3 shadow-sm z-10">
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center shrink-0"><Bot className="w-6 h-6" /></div>
+                <div>
+                  <h3 className="font-bold text-sm font-serif">Asistente Zhineng Qigong (IA)</h3>
+                  <p className="text-[10px] text-red-100">Guía personalizada inspirada en las enseñanzas del Dr. Pang Ming</p>
+                </div>
+              </div>
+              
+              <div className="flex-1 p-5 overflow-y-auto space-y-4 bg-slate-50/60 dark:bg-slate-900/60">
+                {chatMessages.map((msg, idx) => (
+                  <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    <div className={`max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-3 shadow-sm ${msg.role === 'user' ? 'bg-red-800 text-white rounded-br-none' : 'bg-white dark:bg-slate-700 border border-slate-100 dark:border-slate-600 text-slate-700 dark:text-slate-100 rounded-bl-none text-xs'}`}>
+                      <p className="text-xs leading-relaxed whitespace-pre-wrap">{msg.text}</p>
+                    </div>
+                  </div>
+                ))}
+                {isAiTyping && (
+                  <div className="flex justify-start">
+                    <div className="bg-white dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm flex gap-1.5">
+                      <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{animationDelay:'0.2s'}}></div>
+                      <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{animationDelay:'0.4s'}}></div>
+                    </div>
+                  </div>
+                )}
+                <div ref={messagesEndRef} />
+              </div>
+              
+              <div className="p-3 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700">
+                <form onSubmit={handleSendChatMessage} className="flex gap-2">
+                  <input type="text" value={chatInput} onChange={e => setChatInput(e.target.value)} placeholder="Escribe tu consulta sobre la práctica..." className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 text-xs"/>
+                  <button type="submit" disabled={!chatInput.trim() || isAiTyping} className="px-4 py-2.5 bg-red-800 text-white rounded-xl shadow-md hover:bg-red-900 disabled:opacity-50 flex items-center justify-center">
+                    <Send className="w-4 h-4" />
+                  </button>
+                </form>
               </div>
             </div>
-            
-            <div className="flex-1 p-5 overflow-y-auto space-y-4 bg-slate-50/60 dark:bg-slate-900/60">
-              {chatMessages.map((msg, idx) => (
-                <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-3 shadow-sm ${msg.role === 'user' ? 'bg-red-800 text-white rounded-br-none' : 'bg-white dark:bg-slate-700 border border-slate-100 dark:border-slate-600 text-slate-700 dark:text-slate-100 rounded-bl-none text-xs'}`}>
-                    <p className="text-xs leading-relaxed whitespace-pre-wrap">{msg.text}</p>
-                  </div>
-                </div>
-              ))}
-              {isAiTyping && (
-                <div className="flex justify-start">
-                  <div className="bg-white dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm flex gap-1.5">
-                    <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{animationDelay:'0.2s'}}></div>
-                    <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{animationDelay:'0.4s'}}></div>
-                  </div>
-                </div>
-              )}
-              <div ref={messagesEndRef} />
-            </div>
-            
-            <div className="p-3 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700">
-              <form onSubmit={handleSendChatMessage} className="flex gap-2">
-                <input type="text" value={chatInput} onChange={e => setChatInput(e.target.value)} placeholder="Escribe tu consulta sobre la práctica..." className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 text-xs"/>
-                <button type="submit" disabled={!chatInput.trim() || isAiTyping} className="px-4 py-2.5 bg-red-800 text-white rounded-xl shadow-md hover:bg-red-900 disabled:opacity-50 flex items-center justify-center">
-                  <Send className="w-4 h-4" />
-                </button>
-              </form>
-            </div>
-          </div>
+          )
         )}
       </main>
 
