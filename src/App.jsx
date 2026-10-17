@@ -278,34 +278,27 @@ export default function App() {
     setChatInput('');
     setIsAiTyping(true);
 
-    try {
-      const apiKey = ""; 
-      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-      const systemPrompt = `Eres un instructor maestro compasivo y sabio de Zhineng Qigong, formado en el linaje del Dr. Pang Ming. Tu propósito es orientar a los practicantes, responder dudas sobre Zu Chang Fa, La Qi, Peng Qi Guan Ding Fa y la transformación del Qi. Tus respuestas deben ser breves, profundas y cálidas. Siempre alientas a sentir el Campo de Qi y concluyes de vez en cuando con 'Hun Yuan Ling Tong'.`;
-
-      const geminiHistory = chatMessages.map(msg => ({
-        role: msg.role === 'ai' ? 'model' : 'user',
-        parts: [{ text: msg.text }]
-      }));
-      geminiHistory.push({ role: 'user', parts: [{ text: userText }] });
-
-      const response = await fetch(apiUrl, {
+   try {
+      // Llamada a la Serverless Function segura en Vercel
+      const response = await fetch('https://qilife-app-ten.vercel.app/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: geminiHistory,
-          systemInstruction: { parts: [{ text: systemPrompt }] },
-        })
+          messages: chatMessages,
+          userText: userText
+        }),
       });
 
-      const result = await response.json();
-      if (result.candidates && result.candidates[0].content.parts[0].text) {
-        setChatMessages(prev => [...prev, { role: 'ai', text: result.candidates[0].content.parts[0].text }]);
+      const data = await response.json();
+
+      if (data.reply) {
+        setChatMessages(prev => [...prev, { role: 'ai', text: data.reply }]);
       } else {
         setChatMessages(prev => [...prev, { role: 'ai', text: "Hun Yuan Ling Tong. Conectando nuevamente con el campo de Qi..." }]);
       }
     } catch (error) {
-      setChatMessages(prev => [...prev, { role: 'ai', text: "El campo de energía está en reposo. Por favor, realiza una respiración profunda e intenta nuevamente." }]);
+      console.error("Error al conectar con la IA:", error);
+      setChatMessages(prev => [...prev, { role: 'ai', text: "El campo de Qi está en reposo. Por favor, realiza una respiración profunda e intenta nuevamente." }]);
     } finally {
       setIsAiTyping(false);
     }
