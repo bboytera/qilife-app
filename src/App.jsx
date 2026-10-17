@@ -345,14 +345,18 @@ export default function App() {
       </div>
       <h2 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">Acceso Reservado</h2>
       <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed">
-        Contenido exclusivo para miembros del <strong>Plan Qilife Esencial</strong>. Suscríbete para acceder a {title} y completar tu formación en los métodos de Nivel 1.
+        {isEsencialOnly ? (
+          <>Contenido exclusivo para miembros del <strong>Plan Qilife Esencial</strong>. Suscríbete para acceder a {title} y completar tu formación en los métodos de Nivel 1.</>
+        ) : (
+          <>Contenido exclusivo para miembros del <strong>Plan Gratis</strong>. Regístrate sin costo para acceder a {title}.</>
+        )}
       </p>
       <div className="pt-2">
         <button 
-          onClick={() => setActiveTab('esencial')}
+          onClick={() => setActiveTab(isEsencialOnly ? 'esencial' : 'home')}
           className="px-8 py-3.5 bg-gradient-to-r from-red-800 to-red-900 hover:from-red-900 hover:to-red-950 text-white rounded-xl font-bold shadow-lg transition-transform transform hover:scale-105"
         >
-          Ver Detalle del Plan Esencial
+          {isEsencialOnly ? 'Ver Detalle del Plan Esencial' : 'Ir a Registrarse Gratis'}
         </button>
       </div>
     </div>
@@ -693,67 +697,70 @@ export default function App() {
 
         {/* PLAN GRATIS (PRÁCTICA INTERACTIVA Y AUDIOS LIBRES) */}
         {activeTab === 'gratis' && (
-          !isRegistered ? <LockedContent title="Práctica Gratuita (La Qi Interactivo y Zu Chang Fa)" isEsencialOnly={false} /> :
-          <div className="max-w-2xl mx-auto space-y-8 animate-fadeIn">
-            <div className="text-center space-y-2">
-              <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 rounded-full text-xs font-bold uppercase tracking-wider">Plan Gratuito</span>
-              <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-serif">La Qi y Meditación Interactiva</h2>
-              <p className="text-slate-600 dark:text-slate-300 text-sm">Sigue el pulso respiratorio visual para sincronizar la apertura (Kai) y el cierre (He) de Qi.</p>
-            </div>
-            <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-red-50 dark:border-slate-700 text-center space-y-8">
-              <div className="flex justify-center space-x-2">
-                <button
-                  onClick={() => { setTimerMode('laqi'); setTimerSeconds(600); setTimerActive(false); }}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                    timerMode === 'laqi' ? 'bg-red-800 text-white shadow-md' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-                  }`}
-                >
-                  La Qi (10 min)
-                </button>
-                <button
-                  onClick={() => { setTimerMode('meditation'); setTimerSeconds(1200); setTimerActive(false); }}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                    timerMode === 'meditation' ? 'bg-red-800 text-white shadow-md' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-                  }`}
-                >
-                  Zu Chang Fa (20 min)
-                </button>
+          !isRegistered ? (
+            <LockedContent title="Práctica Gratuita (Zu Chang Fa y La Qi)" isEsencialOnly={false} />
+          ) : (
+            <div className="max-w-2xl mx-auto space-y-8 animate-fadeIn">
+              <div className="text-center space-y-2">
+                <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 rounded-full text-xs font-bold uppercase tracking-wider">Plan Gratuito</span>
+                <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-serif">Zu Chang Fa y La Qi</h2>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">Sigue el pulso respiratorio visual para sincronizar la apertura (Kai) y el cierre (He) de Qi.</p>
               </div>
+              <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-red-50 dark:border-slate-700 text-center space-y-8">
+                <div className="flex justify-center space-x-2">
+                  <button
+                    onClick={() => { setTimerMode('laqi'); setTimerSeconds(600); setTimerActive(false); }}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                      timerMode === 'laqi' ? 'bg-red-800 text-white shadow-md' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                    }`}
+                  >
+                    La Qi (10 min)
+                  </button>
+                  <button
+                    onClick={() => { setTimerMode('meditation'); setTimerSeconds(1200); setTimerActive(false); }}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                      timerMode === 'meditation' ? 'bg-red-800 text-white shadow-md' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                    }`}
+                  >
+                    Zu Chang Fa (20 min)
+                  </button>
+                </div>
 
-              <div className="relative w-60 h-60 mx-auto flex items-center justify-center">
-                <div className={`absolute inset-0 rounded-full bg-red-300/30 dark:bg-red-900/30 transition-all duration-5000 ease-in-out ${
-                    timerActive && timerMode === 'laqi' && laQiPhase === 'Abrir (Kai)' ? 'scale-125 opacity-50' : 'scale-90 opacity-20'
-                }`} />
-                <div className={`w-44 h-44 rounded-full bg-gradient-to-tr from-red-900 to-amber-600 shadow-xl flex flex-col items-center justify-center text-white transition-all duration-5000 ease-in-out ${
-                    timerActive && timerMode === 'laqi' && laQiPhase === 'Abrir (Kai)' ? 'scale-105' : 'scale-95'
-                }`}>
-                  <Sparkles className="w-6 h-6 mb-1 animate-pulse text-amber-300" />
-                  <span className="text-3xl font-black tracking-wider">{formatTime(timerSeconds)}</span>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-amber-100 mt-1">
-                    {timerActive ? (timerMode === 'laqi' ? laQiPhase : 'Concentración') : 'Listo'}
-                  </span>
+                <div className="relative w-60 h-60 mx-auto flex items-center justify-center">
+                  <div className={`absolute inset-0 rounded-full bg-red-300/30 dark:bg-red-900/30 transition-all duration-5000 ease-in-out ${
+                      timerActive && timerMode === 'laqi' && laQiPhase === 'Abrir (Kai)' ? 'scale-125 opacity-50' : 'scale-90 opacity-20'
+                  }`} />
+                  <div className={`w-44 h-44 rounded-full bg-gradient-to-tr from-red-900 to-amber-600 shadow-xl flex flex-col items-center justify-center text-white transition-all duration-5000 ease-in-out ${
+                      timerActive && timerMode === 'laqi' && laQiPhase === 'Abrir (Kai)' ? 'scale-105' : 'scale-95'
+                  }`}>
+                    <Sparkles className="w-6 h-6 mb-1 animate-pulse text-amber-300" />
+                    <span className="text-3xl font-black tracking-wider">{formatTime(timerSeconds)}</span>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-amber-100 mt-1">
+                      {timerActive ? (timerMode === 'laqi' ? laQiPhase : 'Concentración') : 'Listo'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex justify-center items-center gap-4">
+                  <button
+                    onClick={() => setTimerActive(!timerActive)}
+                    className={`px-8 py-3.5 rounded-2xl font-bold text-white shadow-md transition-transform hover:scale-105 flex items-center space-x-2 text-sm ${
+                      timerActive ? 'bg-amber-700 hover:bg-amber-800' : 'bg-red-800 hover:bg-red-900'
+                    }`}
+                  >
+                    {timerActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                    <span>{timerActive ? 'Pausar' : 'Comenzar Práctica'}</span>
+                  </button>
+                  <button
+                    onClick={() => { setTimerActive(false); setTimerSeconds(timerMode === 'laqi' ? 600 : 1200); }}
+                    className="p-3.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-2xl transition-colors"
+                  >
+                    <RotateCcw className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
-
-              <div className="flex justify-center items-center gap-4">
-                <button
-                  onClick={() => setTimerActive(!timerActive)}
-                  className={`px-8 py-3.5 rounded-2xl font-bold text-white shadow-md transition-transform hover:scale-105 flex items-center space-x-2 text-sm ${
-                    timerActive ? 'bg-amber-700 hover:bg-amber-800' : 'bg-red-800 hover:bg-red-900'
-                  }`}
-                >
-                  {timerActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                  <span>{timerActive ? 'Pausar' : 'Comenzar Práctica'}</span>
-                </button>
-                <button
-                  onClick={() => { setTimerActive(false); setTimerSeconds(timerMode === 'laqi' ? 600 : 1200); }}
-                  className="p-3.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-2xl transition-colors"
-                >
-                  <RotateCcw className="w-4 h-4" />
-                </button>
-              </div>
             </div>
-          </div>
+          )
         )}
 
         {/* PLAN ESENCIAL */}
@@ -775,7 +782,7 @@ export default function App() {
                 <div className="text-4xl font-black text-white mb-6 text-center">$15 <span className="text-xs text-amber-200 font-normal">/ mes</span></div>
                 <ul className="space-y-3 mb-8 text-xs text-red-50">
                   <li className="flex items-center"><CheckCircle className="w-4 h-4 text-amber-400 mr-2.5" /> Todo lo incluido en el Plan Gratuito</li>
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-amber-400 mr-2.5" /> Videoteca paso a paso (Nivel 1: Peng Qi Guan Ding Fa, Dun Qiang Fa y San Xin)</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-amber-400 mr-2.5" /> Videoteca paso a paso (Nivel 1: Peng Qi Guan Ding Fa, Dun Qiang Fa y San Xin Bing Zhan Zhuang)</li>
                   <li className="flex items-center"><CheckCircle className="w-4 h-4 text-amber-400 mr-2.5" /> Biblioteca de Audios Extensos guiados por el instructor</li>
                   <li className="flex items-center"><CheckCircle className="w-4 h-4 text-amber-400 mr-2.5" /> Acompañamiento en grupo exclusivo de WhatsApp</li>
                 </ul>
