@@ -152,7 +152,7 @@ const QUOTES = [
 ];
 
 export default function App() {
-  // === ESTADO Y LÓGICA DEL MODO OSCURO ===
+  // Modo oscuro
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
@@ -165,14 +165,21 @@ export default function App() {
 
   const [activeTab, setActiveTab] = useState('home');
   const [isRegistered, setIsRegistered] = useState(false);
+
+  useEffect(() => {
+    const userAlreadyRegistered = localStorage.getItem('qilife_user_registered');
+    if (userAlreadyRegistered === 'true') {
+      setIsRegistered(true);
+    }
+  }, []);
   
-  // Timer State
+  // Temporizador interactivo
   const [timerActive, setTimerActive] = useState(false);
   const [timerSeconds, setTimerSeconds] = useState(600);
   const [timerMode, setTimerMode] = useState('laqi'); 
   const [laQiPhase, setLaQiPhase] = useState('Abrir (Kai)');
   
-  // Journal / Progress State
+  // Bitácora personal
   const [journalEntries, setJournalEntries] = useState([
     { id: 1, date: '2026-10-14', practice: 'Zu Chang Fa + Peng Qi Guan Ding Fa', duration: '30 min', notes: 'Sensación intensa de calidez en la coronilla y palmas. Gran serenidad mental.' },
     { id: 2, date: '2026-10-12', practice: 'La Qi', duration: '15 min', notes: 'Apertura de pecho y fluidez en brazos. Desapareció la tensión lumbar.' }
@@ -181,22 +188,22 @@ export default function App() {
   const [newPracticeName, setNewPracticeName] = useState('La Qi');
   const [newDuration, setNewDuration] = useState('15 min');
 
-  // Community State
+  // Comunidad
   const [communityPosts, setCommunityPosts] = useState([
     { id: 1, author: 'María Carmen', date: 'Hace 2 días', content: 'Llevo 3 meses practicando Peng Qi Guan Ding Fa y mis dolores de espalda han desaparecido. ¡Gracias José Antonio por tu guía, el campo de Qi es real!', likes: 14 },
     { id: 2, author: 'Roberto S.', date: 'Hace 4 días', content: 'La práctica de La Qi me ha ayudado muchísimo a controlar mi ansiedad por las noches. La comunidad de Qilife me da mucha fortaleza. Hun Yuan Ling Tong.', likes: 9 }
   ]);
   const [newPost, setNewPost] = useState('');
 
-  // Form State
+  // Formulario
   const [formData, setFormData] = useState({ nombre: '', email: '', whatsapp: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Blog State
+  // Blog
   const [selectedBlogCategory, setSelectedBlogCategory] = useState('Todos');
   const [activeBlog, setActiveBlog] = useState(null);
 
-  // AI Chat State
+  // IA Chat Assistant
   const [chatMessages, setChatMessages] = useState([
     { role: 'ai', text: '¡Hola! Hun Yuan Ling Tong. Soy tu asistente inteligente de Zhineng Qigong. ¿Cómo te sientes física y emocionalmente el día de hoy?' }
   ]);
@@ -269,12 +276,29 @@ export default function App() {
 
   const handleContactSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.nombre || !formData.email) return;
     setIsSubmitting(true);
+    
+    const GOOGLE_SCRIPT_URL = "AQUI_PEGA_TU_URL";
+
     try {
-      await new Promise(resolve => setTimeout(resolve, 1200));
+      if (GOOGLE_SCRIPT_URL !== "AQUI_PEGA_TU_URL") {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+      } else {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+
+      localStorage.setItem('qilife_user_registered', 'true');
+      localStorage.setItem('qilife_user_email', formData.email);
       setIsRegistered(true);
     } catch (error) {
-      console.error(error);
+      console.error("Error en registro:", error);
+      setIsRegistered(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -314,25 +338,21 @@ export default function App() {
     }
   };
 
-  const LockedContent = ({ title, isPremiumOnly = false }) => (
+  const LockedContent = ({ title, isEsencialOnly = true }) => (
     <div className="max-w-2xl mx-auto text-center space-y-6 animate-fadeIn py-12 px-4">
       <div className="w-20 h-20 bg-red-100/80 dark:bg-red-950/50 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-200 dark:border-red-800">
         <Lock className="w-10 h-10 text-red-800 dark:text-red-400" />
       </div>
       <h2 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">Acceso Reservado</h2>
       <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed">
-        {isPremiumOnly ? (
-          <>Contenido exclusivo para miembros del <strong>Plan Qilife Pro</strong>. Regístrate o suscríbete desde el inicio para acceder a {title}.</>
-        ) : (
-          <>Acceso gratuito previa suscripción. Para disfrutar de <strong>{title}</strong> y la práctica interactiva, completa tu registro sin costo en la página principal.</>
-        )}
+        Contenido exclusivo para miembros del <strong>Plan Qilife Esencial</strong>. Suscríbete para acceder a {title} y completar tu formación en los métodos de Nivel 1.
       </p>
       <div className="pt-2">
         <button 
-          onClick={() => setActiveTab('home')}
+          onClick={() => setActiveTab('esencial')}
           className="px-8 py-3.5 bg-gradient-to-r from-red-800 to-red-900 hover:from-red-900 hover:to-red-950 text-white rounded-xl font-bold shadow-lg transition-transform transform hover:scale-105"
         >
-          {isPremiumOnly ? 'Ir a Inicio y Registrarse en Plan Premium' : 'Ir a Inicio y Registrarse Gratis'}
+          Ver Detalle del Plan Esencial
         </button>
       </div>
     </div>
@@ -347,74 +367,73 @@ export default function App() {
       
       {/* HEADER / NAVEGACIÓN */}
       <header className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-red-100/60 dark:border-slate-700">
-  <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
-    
-    {/* LOGO */}
-    <div className="flex items-center space-x-3 cursor-pointer group" onClick={() => setActiveTab('home')}>
-      <img 
-        src="logo_qilife.png" 
-        alt="Qilife Logo" 
-        className="w-12 h-12 object-contain group-hover:scale-105 transition-transform" 
-        onError={(e) => { e.target.style.display = 'none'; }}
-      />
-      <div>
-        <h1 className="text-2xl font-black text-red-900 dark:text-red-400 tracking-tight font-serif">Qilife</h1>
-        <p className="text-[9px] text-amber-700 dark:text-amber-400 font-bold tracking-widest uppercase">Zhineng Qigong</p>
-      </div>
-    </div>
+        <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
+          
+          {/* LOGO */}
+          <div className="flex items-center space-x-3 cursor-pointer group" onClick={() => setActiveTab('home')}>
+            <img 
+              src="logo_qilife.png" 
+              alt="Qilife Logo" 
+              className="w-12 h-12 object-contain group-hover:scale-105 transition-transform" 
+              onError={(e) => { e.target.style.display = 'none'; }}
+            />
+            <div>
+              <h1 className="text-2xl font-black text-red-900 dark:text-red-400 tracking-tight font-serif">Qilife</h1>
+              <p className="text-[9px] text-amber-700 dark:text-amber-400 font-bold tracking-widest uppercase">Zhineng Qigong</p>
+            </div>
+          </div>
 
-    {/* NAVEGACIÓN Y BOTÓN MODO OSCURO */}
-    <nav className="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 bg-slate-50/80 dark:bg-slate-900/80 p-1.5 rounded-2xl border border-red-100/80 dark:border-slate-700 shadow-inner">
-      {[
-        { id: 'home', label: 'Inicio' },
-        { id: 'about_zq', label: '¿Qué es ZQ?' },
-        { id: 'exercises', label: 'Métodos' },
-        { id: 'timer', label: 'Práctica' },
-        { id: 'videos', label: 'Videos' },
-        { id: 'audios', label: 'Audios' },
-        { id: 'blog', label: 'Blog' },
-        { id: 'evolucion', label: 'Mi Evolución' },
-        { id: 'instructor', label: 'Instructor' },
-        { id: 'community', label: 'Comunidad' }
-      ].map(tab => (
-        <button
-          key={tab.id}
-          onClick={() => setActiveTab(tab.id)}
-          className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
-            activeTab === tab.id
-              ? 'bg-red-800 text-white shadow-md'
-              : 'text-slate-600 dark:text-slate-300 hover:text-red-900 dark:hover:text-red-400 hover:bg-red-50/60 dark:hover:bg-slate-800'
-          }`}
-        >
-          {tab.label}
-        </button>
-      ))}
+          {/* NAVEGACIÓN */}
+          <nav className="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 bg-slate-50/80 dark:bg-slate-900/80 p-1.5 rounded-2xl border border-red-100/80 dark:border-slate-700 shadow-inner">
+            {[
+              { id: 'home', label: 'Inicio' },
+              { id: 'about_zq', label: '¿Qué es ZQ?' },
+              { id: 'exercises', label: 'Métodos' },
+              { id: 'gratis', label: 'Plan Gratis' },
+              { id: 'esencial', label: 'Plan Esencial' },
+              { id: 'blog', label: 'Blog' },
+              { id: 'evolucion', label: 'Mi Progreso' },
+              { id: 'instructor', label: 'Instructor' },
+              { id: 'community', label: 'Comunidad' }
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+                  activeTab === tab.id
+                    ? 'bg-red-800 text-white shadow-md'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-red-900 dark:hover:text-red-400 hover:bg-red-50/60 dark:hover:bg-slate-800'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
 
-      <button
-        onClick={() => setActiveTab('ia')}
-        className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 ${
-          activeTab === 'ia' ? 'bg-amber-700 text-white shadow-md' : 'text-amber-800 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-slate-800'
-        }`}
-      >
-        <Bot className="w-3.5 h-3.5" /> IA
-      </button>
+            <button
+              onClick={() => setActiveTab('ia')}
+              className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 ${
+                activeTab === 'ia' ? 'bg-amber-700 text-white shadow-md' : 'text-amber-800 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-slate-800'
+              }`}
+            >
+              <Bot className="w-3.5 h-3.5" /> IA
+            </button>
 
-      {/* BOTÓN MODO OSCURO (SIEMPRE VISIBLE) */}
-      <button
-        onClick={() => setIsDarkMode(!isDarkMode)}
-        className="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-300 dark:hover:bg-slate-600 ml-1"
-      >
-        {isDarkMode ? <><Sun className="w-3.5 h-3.5 text-amber-400" /> Claro</> : <><Moon className="w-3.5 h-3.5 text-slate-700 dark:text-slate-200" /> Oscuro</>}
-      </button>
-    </nav>
+            {/* BOTÓN MODO OSCURO */}
+            <button
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-300 dark:hover:bg-slate-600 ml-1"
+            >
+              {isDarkMode ? <><Sun className="w-3.5 h-3.5 text-amber-400" /> Claro</> : <><Moon className="w-3.5 h-3.5 text-slate-700 dark:text-slate-200" /> Oscuro</>}
+            </button>
+          </nav>
 
-  </div>
-</header>
+        </div>
+      </header>
 
-      {/* CONTENEDOR PRINCIPAL CON ADAPTABILIDAD DE PANTALLA PARA COMPUTADORAS */}
+      {/* CONTENIDO PRINCIPAL */}
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-8">
         
-        {/* HOME VIEW */}
+        {/* INICIO */}
         {activeTab === 'home' && (
           <div className="space-y-8 animate-fadeIn">
             
@@ -427,7 +446,7 @@ export default function App() {
                   Comienza tu viaje en Zhineng Qigong
                 </h2>
                 <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed">
-                  Regístrate para recibir información y acceder al plan gratuito, donde desbloquearás la práctica interactiva de <strong>Zu Chang Fa</strong> (audio guiado) y <strong>La Qi</strong>.
+                  Regístrate para recibir información y acceder al <strong>plan gratuito</strong>, donde desbloquearás la práctica interactiva de <strong>Zu Chang Fa</strong> y <strong>La Qi (audio guiado)</strong>.
                 </p>
                 <div className="flex items-center gap-4 pt-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
                   <span className="flex items-center gap-1"><ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400"/> 100% Gratuito</span>
@@ -441,7 +460,7 @@ export default function App() {
                     <UserCheck className="w-14 h-14 text-emerald-600 dark:text-emerald-400 mx-auto" />
                     <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100">¡Registro Completado!</h3>
                     <p className="text-sm text-slate-600 dark:text-slate-300">Has desbloqueado tus herramientas de práctica gratuita.</p>
-                    <button onClick={() => setActiveTab('timer')} className="w-full py-3 bg-red-800 hover:bg-red-900 text-white rounded-xl font-bold shadow-md transition-colors mt-2 text-sm">
+                    <button onClick={() => setActiveTab('gratis')} className="w-full py-3 bg-red-800 hover:bg-red-900 text-white rounded-xl font-bold shadow-md transition-colors mt-2 text-sm">
                       Iniciar Práctica La Qi
                     </button>
                   </div>
@@ -467,7 +486,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Reflection */}
+            {/* Reflexión */}
             <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-red-100 dark:border-slate-700 flex items-center gap-5">
               <div className="w-12 h-12 bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400 rounded-full flex items-center justify-center shrink-0 hidden sm:flex">
                 <Sun className="w-6 h-6" />
@@ -478,7 +497,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Navigation Cards */}
+            {/* Tarjetas de Navegación */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
                 { tab: 'about_zq', title: '¿Qué es Zhineng Qigong?', desc: 'Conoce los principios científicos y filosóficos del Dr. Pang Ming.', icon: Info, color: 'text-amber-800 dark:text-amber-400', bg: 'bg-amber-100/70 dark:bg-amber-950/50' },
@@ -505,25 +524,25 @@ export default function App() {
               ))}
             </div>
 
-            {/* Premium CTA */}
-            <div className="bg-gradient-to-r from-red-900 via-red-800 to-amber-900 rounded-3xl p-6 sm:p-8 shadow-md text-white flex flex-col sm:flex-row items-center justify-between gap-6 cursor-pointer hover:shadow-lg transition-all" onClick={() => setActiveTab('premium')}>
+            {/* CTA Plan Esencial */}
+            <div className="bg-gradient-to-r from-red-900 via-red-800 to-amber-900 rounded-3xl p-6 sm:p-8 shadow-md text-white flex flex-col sm:flex-row items-center justify-between gap-6 cursor-pointer hover:shadow-lg transition-all" onClick={() => setActiveTab('esencial')}>
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center shrink-0">
                   <Star className="w-6 h-6 text-amber-300 fill-current" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold font-serif">Únete a Qilife Pro</h3>
-                  <p className="text-red-100 text-xs sm:text-sm mt-0.5">Accede a videoteca completa, audios extensos de práctica y acompañamiento.</p>
+                  <h3 className="text-xl font-bold font-serif">Únete a Qilife Esencial</h3>
+                  <p className="text-red-100 text-xs sm:text-sm mt-0.5">Accede a todos los métodos de Nivel 1, videoteca, audios de práctica extensos y acompañamiento.</p>
                 </div>
               </div>
               <button className="px-6 py-2.5 bg-white text-red-900 font-bold rounded-xl shadow-sm hover:bg-amber-50 transition-colors whitespace-nowrap text-sm">
-                Ver Plan Premium
+                Ver Plan Esencial
               </button>
             </div>
           </div>
         )}
 
-        {/* ABOUT ZQ VIEW */}
+        {/* ¿QUÉ ES ZQ? */}
         {activeTab === 'about_zq' && (
           <div className="space-y-10 animate-fadeIn max-w-4xl mx-auto">
             <div className="text-center space-y-3">
@@ -626,7 +645,7 @@ export default function App() {
           </div>
         )}
 
-        {/* METHODS VIEW */}
+        {/* MÉTODOS */}
         {activeTab === 'exercises' && (
           <div className="space-y-8 animate-fadeIn">
             <div className="text-center max-w-2xl mx-auto space-y-3">
@@ -672,14 +691,14 @@ export default function App() {
           </div>
         )}
 
-        {/* FREE PRACTICE (TIMER) VIEW */}
-        {activeTab === 'timer' && (
-          !isRegistered ? <LockedContent title="Práctica Gratuita (La Qi Interactivo)" /> :
+        {/* PLAN GRATIS (PRÁCTICA INTERACTIVA Y AUDIOS LIBRES) */}
+        {activeTab === 'gratis' && (
+          !isRegistered ? <LockedContent title="Práctica Gratuita (La Qi Interactivo y Zu Chang Fa)" isEsencialOnly={false} /> :
           <div className="max-w-2xl mx-auto space-y-8 animate-fadeIn">
             <div className="text-center space-y-2">
-              <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 rounded-full text-xs font-bold uppercase tracking-wider">Práctica Gratuita</span>
+              <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 rounded-full text-xs font-bold uppercase tracking-wider">Plan Gratuito</span>
               <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-serif">La Qi y Meditación Interactiva</h2>
-              <p className="text-slate-600 dark:text-slate-300 text-sm">Sigue el pulso respiratorio visual para sincronizar la apertura (Kai) y el cierre (He) de energía.</p>
+              <p className="text-slate-600 dark:text-slate-300 text-sm">Sigue el pulso respiratorio visual para sincronizar la apertura (Kai) y el cierre (He) de Qi.</p>
             </div>
             <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-red-50 dark:border-slate-700 text-center space-y-8">
               <div className="flex justify-center space-x-2">
@@ -697,7 +716,7 @@ export default function App() {
                     timerMode === 'meditation' ? 'bg-red-800 text-white shadow-md' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                   }`}
                 >
-                  Meditación (20 min)
+                  Zu Chang Fa (20 min)
                 </button>
               </div>
 
@@ -737,17 +756,57 @@ export default function App() {
           </div>
         )}
 
-        {/* VIDEOS VIEW */}
-        {activeTab === 'videos' && (
-          <LockedContent title="Videoteca Instruccional Completa" isPremiumOnly={true} />
+        {/* PLAN ESENCIAL */}
+        {activeTab === 'esencial' && (
+          <div className="space-y-8 animate-fadeIn max-w-5xl mx-auto">
+            <div className="text-center max-w-2xl mx-auto space-y-3">
+              <span className="px-3 py-1 bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 rounded-full text-xs font-bold tracking-wider uppercase">Inmersión Nivel 1</span>
+              <h2 className="text-3xl sm:text-4xl font-bold text-slate-800 dark:text-slate-100 font-serif">Plan Qilife Esencial</h2>
+              <p className="text-slate-600 dark:text-slate-300 text-sm">Inmersión profunda en todos los métodos fundamentales de Zhineng Qigong con videoteca y audios extensos.</p>
+            </div>
+
+            <div className="bg-gradient-to-b from-red-900 via-red-800 to-amber-950 text-white rounded-3xl p-8 border-2 border-amber-500 shadow-xl relative flex flex-col justify-between max-w-2xl mx-auto">
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-amber-500 text-slate-900 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md">
+                Recomendado
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold mb-2 font-serif text-center">Plan Qilife Esencial</h3>
+                <p className="text-red-100 text-xs mb-6 text-center">Para practicantes en búsqueda de profundización técnica y acompañamiento.</p>
+                <div className="text-4xl font-black text-white mb-6 text-center">$15 <span className="text-xs text-amber-200 font-normal">/ mes</span></div>
+                <ul className="space-y-3 mb-8 text-xs text-red-50">
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-amber-400 mr-2.5" /> Todo lo incluido en el Plan Gratuito</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-amber-400 mr-2.5" /> Videoteca paso a paso (Nivel 1: Peng Qi Guan Ding Fa, Dun Qiang Fa y San Xin)</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-amber-400 mr-2.5" /> Biblioteca de Audios Extensos guiados por el instructor</li>
+                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-amber-400 mr-2.5" /> Acompañamiento en grupo exclusivo de WhatsApp</li>
+                </ul>
+              </div>
+              <button 
+                onClick={() => alert("Próximamente podrás suscribirte directamente vía Hotmart, Stripe o PayPal.")}
+                className="w-full py-3.5 rounded-xl font-bold text-slate-900 bg-gradient-to-r from-amber-300 to-amber-400 hover:from-amber-400 hover:to-amber-500 shadow-md transition-transform transform hover:scale-105 flex items-center justify-center gap-2 text-xs"
+              >
+                <CreditCard className="w-4 h-4" /> Suscribirme a Qilife Esencial
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+              <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm text-center space-y-3">
+                <Video className="w-10 h-10 text-red-800 dark:text-red-400 mx-auto" />
+                <h4 className="font-bold text-slate-800 dark:text-slate-100 font-serif">Videoteca Guiada Nivel 1</h4>
+                <p className="text-xs text-slate-600 dark:text-slate-300">Explicaciones postura por postura y correcciones comunes en video de alta definición.</p>
+                <span className="inline-block px-3 py-1 bg-amber-50 dark:bg-amber-950 text-amber-800 dark:text-amber-300 rounded-full text-[10px] font-bold">Incluido en Esencial</span>
+              </div>
+
+              <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm text-center space-y-3">
+                <Headphones className="w-10 h-10 text-amber-700 dark:text-amber-400 mx-auto" />
+                <h4 className="font-bold text-slate-800 dark:text-slate-100 font-serif">Audios Extensos de Práctica</h4>
+                <p className="text-xs text-slate-600 dark:text-slate-300">Sesiones de 30 a 60 minutos con inducciones profundas de Hunyuan Qi para llevar a cabo en casa.</p>
+                <span className="inline-block px-3 py-1 bg-amber-50 dark:bg-amber-950 text-amber-800 dark:text-amber-300 rounded-full text-[10px] font-bold">Incluido en Esencial</span>
+              </div>
+            </div>
+          </div>
         )}
 
-        {/* AUDIOS VIEW */}
-        {activeTab === 'audios' && (
-          <LockedContent title="Biblioteca de Audios Guiados (Shuai Shou Gong y Prácticas Extensas)" isPremiumOnly={true} />
-        )}
-
-        {/* BLOG VIEW */}
+        {/* BLOG */}
         {activeTab === 'blog' && (
           <div className="space-y-8 animate-fadeIn max-w-5xl mx-auto">
             <div className="text-center max-w-2xl mx-auto space-y-3">
@@ -834,12 +893,12 @@ export default function App() {
           </div>
         )}
 
-        {/* MY EVOLUTION VIEW */}
+        {/* MI PROGRESO */}
         {activeTab === 'evolucion' && (
           <div className="space-y-8 animate-fadeIn max-w-6xl mx-auto">
             <div className="text-center space-y-2 max-w-2xl mx-auto">
               <span className="px-3 py-1 bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 rounded-full text-xs font-bold uppercase tracking-wider">Bitácora Personal</span>
-              <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-serif">Mi Evolución en Zhineng Qigong</h2>
+              <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-serif">Mi Progreso en Zhineng Qigong</h2>
               <p className="text-slate-600 dark:text-slate-300 text-sm">Visualiza tus métricas de práctica constante y registra tus percepciones del flujo de Qi.</p>
             </div>
             
@@ -927,7 +986,7 @@ export default function App() {
           </div>
         )}
 
-        {/* INSTRUCTOR VIEW */}
+        {/* INSTRUCTOR */}
         {activeTab === 'instructor' && (
           <div className="max-w-4xl mx-auto space-y-8 animate-fadeIn">
             <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-red-50 dark:border-slate-700 flex flex-col md:flex-row items-center gap-8">
@@ -985,7 +1044,7 @@ export default function App() {
           </div>
         )}
 
-        {/* COMMUNITY VIEW */}
+        {/* COMUNIDAD */}
         {activeTab === 'community' && (
           <div className="space-y-8 animate-fadeIn max-w-4xl mx-auto">
             <div className="text-center max-w-2xl mx-auto space-y-2">
@@ -1036,66 +1095,13 @@ export default function App() {
           </div>
         )}
 
-        {/* PREMIUM MEMBERSHIP VIEW */}
-        {activeTab === 'premium' && (
-          <div className="space-y-8 animate-fadeIn max-w-5xl mx-auto">
-            <div className="text-center max-w-2xl mx-auto space-y-3">
-              <span className="px-3 py-1 bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 rounded-full text-xs font-bold tracking-wider uppercase">Membresía Exclusiva</span>
-              <h2 className="text-3xl sm:text-4xl font-bold text-slate-800 dark:text-slate-100 font-serif">Planes Qilife</h2>
-              <p className="text-slate-600 dark:text-slate-300 text-sm">Elige la modalidad que mejor se adapte a tus metas de práctica e inmersión.</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
-              
-              <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 border-2 border-slate-100 dark:border-slate-700 shadow-sm flex flex-col justify-between">
-                <div>
-                  <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-2 font-serif">Plan Gratuito</h3>
-                  <p className="text-slate-500 dark:text-slate-400 text-xs mb-6">Acceso a la práctica esencial e interactiva.</p>
-                  <div className="text-4xl font-black text-slate-800 dark:text-slate-100 mb-6">$0 <span className="text-xs text-slate-400 font-normal">/ siempre</span></div>
-                  <ul className="space-y-3 mb-8 text-xs">
-                    <li className="flex items-center text-slate-600 dark:text-slate-300"><CheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mr-2.5" /> Temporizador interactivo de La Qi</li>
-                    <li className="flex items-center text-slate-600 dark:text-slate-300"><CheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mr-2.5" /> Audio base de Zu Chang Fa</li>
-                    <li className="flex items-center text-slate-600 dark:text-slate-300"><CheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mr-2.5" /> Registro en bitácora personal</li>
-                    <li className="flex items-center text-slate-400"><Lock className="w-4 h-4 text-slate-300 dark:text-slate-600 mr-2.5" /> Videoteca guiada completa</li>
-                  </ul>
-                </div>
-                <button onClick={() => setActiveTab('home')} className="w-full py-3 rounded-xl font-bold text-red-900 dark:text-red-400 bg-red-50 dark:bg-slate-700 hover:bg-red-100 dark:hover:bg-slate-600 transition-colors text-xs">
-                  Ir a Registro Gratuito
-                </button>
-              </div>
-
-              <div className="bg-gradient-to-b from-red-900 via-red-800 to-amber-950 text-white rounded-3xl p-8 border-2 border-amber-500 shadow-xl relative flex flex-col justify-between">
-                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-amber-500 text-slate-900 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md">
-                  Recomendado
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold mb-2 font-serif">Qilife Pro</h3>
-                  <p className="text-red-100 text-xs mb-6">Para practicantes en búsqueda de inmersión total.</p>
-                  <div className="text-4xl font-black text-white mb-6">$15 <span className="text-xs text-amber-200 font-normal">/ mes</span></div>
-                  <ul className="space-y-3 mb-8 text-xs text-red-50">
-                    <li className="flex items-center"><CheckCircle className="w-4 h-4 text-amber-400 mr-2.5" /> Todo lo incluido en el Plan Gratuito</li>
-                    <li className="flex items-center"><CheckCircle className="w-4 h-4 text-amber-400 mr-2.5" /> Videoteca paso a paso (Nivel 1, 2 y Sentadillas)</li>
-                    <li className="flex items-center"><CheckCircle className="w-4 h-4 text-amber-400 mr-2.5" /> Audios extensos (Shuai Shou Gong)</li>
-                    <li className="flex items-center"><CheckCircle className="w-4 h-4 text-amber-400 mr-2.5" /> Acompañamiento directo en grupo de WhatsApp</li>
-                  </ul>
-                </div>
-                <button 
-                  onClick={() => alert("Próximamente podrás suscribirte directamente vía Hotmart, Stripe o PayPal.")}
-                  className="w-full py-3 rounded-xl font-bold text-slate-900 bg-gradient-to-r from-amber-300 to-amber-400 hover:from-amber-400 hover:to-amber-500 shadow-md transition-transform transform hover:scale-105 flex items-center justify-center gap-2 text-xs"
-                >
-                  <CreditCard className="w-4 h-4" /> Suscribirme a Qilife Pro
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* AI COACH VIEW */}
+        {/* ASISTENTE IA */}
         {activeTab === 'ia' && (
           <div className="max-w-3xl mx-auto h-[580px] flex flex-col bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-red-50 dark:border-slate-700 overflow-hidden animate-fadeIn">
             <div className="bg-gradient-to-r from-red-900 to-red-800 text-white p-4 flex items-center gap-3 shadow-sm z-10">
               <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center shrink-0"><Bot className="w-6 h-6" /></div>
               <div>
-                <h3 className="font-bold text-sm font-serif">Asistente Zhineng Qigong (Gemini IA)</h3>
+                <h3 className="font-bold text-sm font-serif">Asistente Zhineng Qigong (IA)</h3>
                 <p className="text-[10px] text-red-100">Guía personalizada inspirada en las enseñanzas del Dr. Pang Ming</p>
               </div>
             </div>
