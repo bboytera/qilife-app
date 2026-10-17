@@ -152,6 +152,17 @@ const QUOTES = [
 ];
 
 export default function App() {
+  // === ESTADO Y LÓGICA DEL MODO OSCURO ===
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
+
   const [activeTab, setActiveTab] = useState('home');
   const [isRegistered, setIsRegistered] = useState(false);
   
@@ -278,8 +289,7 @@ export default function App() {
     setChatInput('');
     setIsAiTyping(true);
 
-   try {
-      // Llamada a la Serverless Function segura en Vercel
+    try {
       const response = await fetch('https://qilife-app-ten.vercel.app/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -306,11 +316,11 @@ export default function App() {
 
   const LockedContent = ({ title, isPremiumOnly = false }) => (
     <div className="max-w-2xl mx-auto text-center space-y-6 animate-fadeIn py-12 px-4">
-      <div className="w-20 h-20 bg-red-100/80 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-200">
-        <Lock className="w-10 h-10 text-red-800" />
+      <div className="w-20 h-20 bg-red-100/80 dark:bg-red-950/50 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-200 dark:border-red-800">
+        <Lock className="w-10 h-10 text-red-800 dark:text-red-400" />
       </div>
-      <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">Acceso Reservado</h2>
-      <p className="text-slate-600 text-base sm:text-lg leading-relaxed">
+      <h2 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">Acceso Reservado</h2>
+      <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed">
         {isPremiumOnly ? (
           <>Contenido exclusivo para miembros del <strong>Plan Qilife Pro</strong>. Regístrate o suscríbete desde el inicio para acceder a {title}.</>
         ) : (
@@ -333,24 +343,36 @@ export default function App() {
     : BLOG_POSTS.filter(b => b.category === selectedBlogCategory);
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] text-slate-800 font-sans flex flex-col selection:bg-red-200 selection:text-red-900">
+    <div className="min-h-screen bg-[#FAF7F2] dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans flex flex-col selection:bg-red-200 selection:text-red-900 transition-colors duration-300">
       
-      <header className="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-red-100/60">
+      {/* HEADER / NAVEGACIÓN */}
+      <header className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-red-100/60 dark:border-slate-700">
         <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col lg:flex-row justify-between items-center gap-3">
-          <div className="flex items-center space-x-3 cursor-pointer group" onClick={() => setActiveTab('home')}>
-            <img 
-              src="logo_qilife.png" 
-              alt="Qilife Logo" 
-              className="w-12 h-12 object-contain group-hover:scale-105 transition-transform" 
-              onError={(e) => { e.target.style.display = 'none'; }}
-            />
-            <div>
-              <h1 className="text-2xl font-black text-red-900 tracking-tight font-serif">Qilife</h1>
-              <p className="text-[9px] text-amber-700 font-bold tracking-widest uppercase">Zhineng Qigong</p>
+          
+          <div className="flex items-center justify-between w-full lg:w-auto">
+            <div className="flex items-center space-x-3 cursor-pointer group" onClick={() => setActiveTab('home')}>
+              <img 
+                src="logo_qilife.png" 
+                alt="Qilife Logo" 
+                className="w-12 h-12 object-contain group-hover:scale-105 transition-transform" 
+                onError={(e) => { e.target.style.display = 'none'; }}
+              />
+              <div>
+                <h1 className="text-2xl font-black text-red-900 dark:text-red-400 tracking-tight font-serif">Qilife</h1>
+                <p className="text-[9px] text-amber-700 dark:text-amber-400 font-bold tracking-widest uppercase">Zhineng Qigong</p>
+              </div>
             </div>
+
+            {/* BOTÓN MODO OSCURO EN MÓVILES */}
+            <button 
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className="lg:hidden p-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200"
+            >
+              {isDarkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-slate-700" />}
+            </button>
           </div>
 
-          <nav className="flex flex-wrap justify-center gap-1 sm:gap-1.5 bg-slate-50/80 p-1.5 rounded-2xl border border-red-100/80 shadow-inner">
+          <nav className="flex flex-wrap justify-center gap-1 sm:gap-1.5 bg-slate-50/80 dark:bg-slate-900/80 p-1.5 rounded-2xl border border-red-100/80 dark:border-slate-700 shadow-inner">
             {[
               { id: 'home', label: 'Inicio' },
               { id: 'about_zq', label: '¿Qué es ZQ?' },
@@ -369,7 +391,7 @@ export default function App() {
                 className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
                   activeTab === tab.id
                     ? 'bg-red-800 text-white shadow-md'
-                    : 'text-slate-600 hover:text-red-900 hover:bg-red-50/60'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-red-900 dark:hover:text-red-400 hover:bg-red-50/60 dark:hover:bg-slate-800'
                 }`}
               >
                 {tab.label}
@@ -378,45 +400,54 @@ export default function App() {
             <button
               onClick={() => setActiveTab('ia')}
               className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 ${
-                activeTab === 'ia' ? 'bg-amber-700 text-white shadow-md' : 'text-amber-800 hover:bg-amber-50'
+                activeTab === 'ia' ? 'bg-amber-700 text-white shadow-md' : 'text-amber-800 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-slate-800'
               }`}
             >
               <Bot className="w-3.5 h-3.5" /> IA
             </button>
           </nav>
+
+          {/* BOTÓN MODO OSCURO EN ESCRITORIO */}
+          <button 
+            onClick={() => setIsDarkMode(!isDarkMode)}
+            className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold hover:bg-slate-200 dark:hover:bg-slate-600 transition"
+          >
+            {isDarkMode ? <><Sun className="w-4 h-4 text-amber-400" /> Claro</> : <><Moon className="w-4 h-4 text-slate-700" /> Oscuro</>}
+          </button>
+
         </div>
       </header>
 
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-8">
+      {/* CONTENEDOR PRINCIPAL CON ADAPTABILIDAD DE PANTALLA PARA COMPUTADORAS */}
+      <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-8">
         
         {/* HOME VIEW */}
         {activeTab === 'home' && (
           <div className="space-y-8 animate-fadeIn">
             
-            {/* Registration Banner / Lead Magnet */}
-            <div className="relative overflow-hidden bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-red-100 flex flex-col lg:flex-row items-center gap-8">
+            <div className="relative overflow-hidden bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-10 shadow-xl border border-red-100 dark:border-slate-700 flex flex-col lg:flex-row items-center gap-8">
               <div className="flex-1 space-y-4">
-                <span className="inline-block px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-bold uppercase tracking-wider">
+                <span className="inline-block px-3 py-1 bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-300 rounded-full text-xs font-bold uppercase tracking-wider">
                   Da el primer paso
                 </span>
-                <h2 className="text-3xl sm:text-5xl font-black text-slate-800 tracking-tight leading-tight font-serif">
+                <h2 className="text-3xl sm:text-5xl font-black text-slate-800 dark:text-slate-100 tracking-tight leading-tight font-serif">
                   Comienza tu viaje en Zhineng Qigong
                 </h2>
-                <p className="text-slate-600 text-base sm:text-lg leading-relaxed">
+                <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed">
                   Regístrate para recibir información y acceder al plan gratuito, donde desbloquearás la práctica interactiva de <strong>Zu Chang Fa</strong> (audio guiado) y <strong>La Qi</strong>.
                 </p>
-                <div className="flex items-center gap-4 pt-2 text-xs font-semibold text-slate-500">
-                  <span className="flex items-center gap-1"><ShieldCheck className="w-4 h-4 text-emerald-600"/> 100% Gratuito</span>
-                  <span className="flex items-center gap-1"><Sparkles className="w-4 h-4 text-amber-600"/> Sin Tarjeta</span>
+                <div className="flex items-center gap-4 pt-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+                  <span className="flex items-center gap-1"><ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400"/> 100% Gratuito</span>
+                  <span className="flex items-center gap-1"><Sparkles className="w-4 h-4 text-amber-600 dark:text-amber-400"/> Sin Tarjeta</span>
                 </div>
               </div>
 
-              <div className="w-full lg:w-[380px] bg-gradient-to-b from-slate-50 to-red-50/30 p-6 rounded-2xl border border-red-100 shadow-inner">
+              <div className="w-full lg:w-[380px] bg-gradient-to-b from-slate-50 to-red-50/30 dark:from-slate-900 dark:to-slate-800/80 p-6 rounded-2xl border border-red-100 dark:border-slate-700 shadow-inner">
                 {isRegistered ? (
                   <div className="text-center py-6 space-y-4">
-                    <UserCheck className="w-14 h-14 text-emerald-600 mx-auto" />
-                    <h3 className="text-xl font-bold text-slate-800">¡Registro Completado!</h3>
-                    <p className="text-sm text-slate-600">Has desbloqueado tus herramientas de práctica gratuita.</p>
+                    <UserCheck className="w-14 h-14 text-emerald-600 dark:text-emerald-400 mx-auto" />
+                    <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100">¡Registro Completado!</h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-300">Has desbloqueado tus herramientas de práctica gratuita.</p>
                     <button onClick={() => setActiveTab('timer')} className="w-full py-3 bg-red-800 hover:bg-red-900 text-white rounded-xl font-bold shadow-md transition-colors mt-2 text-sm">
                       Iniciar Práctica La Qi
                     </button>
@@ -424,16 +455,16 @@ export default function App() {
                 ) : (
                   <form onSubmit={handleContactSubmit} className="space-y-3.5">
                     <div>
-                      <label className="text-[11px] font-bold text-slate-500 uppercase">Nombre Completo</label>
-                      <input type="text" required value={formData.nombre} onChange={e => setFormData({...formData, nombre: e.target.value})} className="w-full mt-1 px-3.5 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-red-600 bg-white text-sm" placeholder="Tu nombre"/>
+                      <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase">Nombre Completo</label>
+                      <input type="text" required value={formData.nombre} onChange={e => setFormData({...formData, nombre: e.target.value})} className="w-full mt-1 px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 bg-white text-sm" placeholder="Tu nombre"/>
                     </div>
                     <div>
-                      <label className="text-[11px] font-bold text-slate-500 uppercase">WhatsApp</label>
-                      <input type="tel" required value={formData.whatsapp} onChange={e => setFormData({...formData, whatsapp: e.target.value})} className="w-full mt-1 px-3.5 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-red-600 bg-white text-sm" placeholder="+52..."/>
+                      <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase">WhatsApp</label>
+                      <input type="tel" required value={formData.whatsapp} onChange={e => setFormData({...formData, whatsapp: e.target.value})} className="w-full mt-1 px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 bg-white text-sm" placeholder="+52..."/>
                     </div>
                     <div>
-                      <label className="text-[11px] font-bold text-slate-500 uppercase">Correo Electrónico</label>
-                      <input type="email" required value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full mt-1 px-3.5 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-red-600 bg-white text-sm" placeholder="tu@correo.com"/>
+                      <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase">Correo Electrónico</label>
+                      <input type="email" required value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full mt-1 px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 bg-white text-sm" placeholder="tu@correo.com"/>
                     </div>
                     <button type="submit" disabled={isSubmitting} className="w-full py-3 mt-2 rounded-xl font-bold text-white bg-red-800 hover:bg-red-900 shadow-md flex justify-center items-center gap-2 transition-colors text-sm">
                       {isSubmitting ? 'Desbloqueando...' : <><Unlock className="w-4 h-4"/> Regístrate Gratis</>}
@@ -443,45 +474,45 @@ export default function App() {
               </div>
             </div>
 
-            {/* Daily Quote / Reflection */}
-            <div className="bg-white rounded-3xl p-6 shadow-sm border border-red-100 flex items-center gap-5">
-              <div className="w-12 h-12 bg-amber-50 text-amber-700 rounded-full flex items-center justify-center shrink-0 hidden sm:flex">
+            {/* Reflection */}
+            <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-red-100 dark:border-slate-700 flex items-center gap-5">
+              <div className="w-12 h-12 bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400 rounded-full flex items-center justify-center shrink-0 hidden sm:flex">
                 <Sun className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-red-800 font-bold text-xs uppercase tracking-widest mb-1">Reflexión del Día</p>
-                <p className="text-slate-700 italic text-base sm:text-lg font-medium">"{QUOTES[dailyQuoteIndex]}"</p>
+                <p className="text-red-800 dark:text-red-400 font-bold text-xs uppercase tracking-widest mb-1">Reflexión del Día</p>
+                <p className="text-slate-700 dark:text-slate-200 italic text-base sm:text-lg font-medium">"{QUOTES[dailyQuoteIndex]}"</p>
               </div>
             </div>
 
-            {/* Structured Grid Navigation Cards */}
+            {/* Navigation Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
-                { tab: 'about_zq', title: '¿Qué es Zhineng Qigong?', desc: 'Conoce los principios científicos y filosóficos del Dr. Pang Ming.', icon: Info, color: 'text-amber-800', bg: 'bg-amber-100/70' },
-                { tab: 'exercises', title: 'Métodos Principales', desc: 'Aprende los movimientos de Zu Chang Fa, La Qi y Nivel 1.', icon: Activity, color: 'text-red-800', bg: 'bg-red-100/70' },
-                { tab: 'instructor', title: 'Acerca del Instructor', desc: 'Conoce a José Antonio Cano y su trayectoria en China.', icon: Users, color: 'text-rose-800', bg: 'bg-rose-100/70' },
-                { tab: 'community', title: 'Comunidad Activa', desc: 'Descubre historias reales de sanación y cambio vital.', icon: MessageSquare, color: 'text-amber-900', bg: 'bg-amber-50' }
+                { tab: 'about_zq', title: '¿Qué es Zhineng Qigong?', desc: 'Conoce los principios científicos y filosóficos del Dr. Pang Ming.', icon: Info, color: 'text-amber-800 dark:text-amber-400', bg: 'bg-amber-100/70 dark:bg-amber-950/50' },
+                { tab: 'exercises', title: 'Métodos Principales', desc: 'Aprende los movimientos de Zu Chang Fa, La Qi y Nivel 1.', icon: Activity, color: 'text-red-800 dark:text-red-400', bg: 'bg-red-100/70 dark:bg-red-950/50' },
+                { tab: 'instructor', title: 'Acerca del Instructor', desc: 'Conoce a José Antonio Cano y su trayectoria en China.', icon: Users, color: 'text-rose-800 dark:text-rose-400', bg: 'bg-rose-100/70 dark:bg-rose-950/50' },
+                { tab: 'community', title: 'Comunidad Activa', desc: 'Descubre historias reales de sanación y cambio vital.', icon: MessageSquare, color: 'text-amber-900 dark:text-amber-300', bg: 'bg-amber-50 dark:bg-amber-950/30' }
               ].map((item, i) => (
                 <div 
                   key={i}
                   onClick={() => setActiveTab(item.tab)}
-                  className="bg-white p-6 rounded-3xl shadow-sm border border-red-50 hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
+                  className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-red-50 dark:border-slate-700 hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
                 >
                   <div>
                     <div className={`w-12 h-12 rounded-2xl ${item.bg} ${item.color} flex items-center justify-center mb-4 group-hover:bg-red-800 group-hover:text-white transition-colors`}>
                       <item.icon className="w-6 h-6" />
                     </div>
-                    <h3 className="text-lg font-bold text-slate-800 mb-2 font-serif">{item.title}</h3>
-                    <p className="text-xs text-slate-600 leading-relaxed">{item.desc}</p>
+                    <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2 font-serif">{item.title}</h3>
+                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{item.desc}</p>
                   </div>
-                  <div className="mt-4 flex items-center gap-1 text-xs font-bold text-red-800 group-hover:translate-x-1 transition-transform">
+                  <div className="mt-4 flex items-center gap-1 text-xs font-bold text-red-800 dark:text-red-400 group-hover:translate-x-1 transition-transform">
                     <span>Explorar</span> <ChevronRight className="w-4 h-4" />
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* Premium Call to Action */}
+            {/* Premium CTA */}
             <div className="bg-gradient-to-r from-red-900 via-red-800 to-amber-900 rounded-3xl p-6 sm:p-8 shadow-md text-white flex flex-col sm:flex-row items-center justify-between gap-6 cursor-pointer hover:shadow-lg transition-all" onClick={() => setActiveTab('premium')}>
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center shrink-0">
@@ -499,23 +530,20 @@ export default function App() {
           </div>
         )}
 
-        {/* ABOUT ZQ VIEW - UPDATED WITH COMPLETE OFFICIAL INFORMATION */}
+        {/* ABOUT ZQ VIEW */}
         {activeTab === 'about_zq' && (
           <div className="space-y-10 animate-fadeIn max-w-4xl mx-auto">
-            
-            {/* Header Section */}
             <div className="text-center space-y-3">
-              <span className="px-3.5 py-1 bg-amber-100 text-amber-900 rounded-full text-xs font-bold uppercase tracking-wider">Ciencia de la Conciencia</span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-800 font-serif">¿Qué es Zhineng Qigong?</h2>
+              <span className="px-3.5 py-1 bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 rounded-full text-xs font-bold uppercase tracking-wider">Ciencia de la Conciencia</span>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-800 dark:text-slate-100 font-serif">¿Qué es Zhineng Qigong?</h2>
             </div>
 
-            {/* SECTION 1: ¿Qué es Zhineng Qigong? */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-red-100 space-y-5 leading-relaxed text-slate-700">
-              <p className="text-base sm:text-lg font-serif text-red-950 border-l-4 border-amber-600 pl-4 py-1 bg-amber-50/50 rounded-r-xl">
+            <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm border border-red-100 dark:border-slate-700 space-y-5 leading-relaxed text-slate-700 dark:text-slate-300">
+              <p className="text-base sm:text-lg font-serif text-red-950 dark:text-red-300 border-l-4 border-amber-600 pl-4 py-1 bg-amber-50/50 dark:bg-amber-950/30 rounded-r-xl">
                 Zhineng Qigong es una ciencia del cultivo de la salud y la conciencia desarrollada en la década de 1980 por el <strong>Dr. Pang Ming</strong>, médico formado en medicina tradicional china y medicina occidental. El término se traduce como <em>"Qigong para el desarrollo de la inteligencia y la sabiduría"</em>.
               </p>
               
-              <div className="text-sm space-y-4 text-slate-600">
+              <div className="text-sm space-y-4 text-slate-600 dark:text-slate-300">
                 <p>
                   A diferencia de otras ramas tradicionales o formas de ejercicio puramente físico, Zhineng Qigong se fundamenta en la <strong>Teoría del Hunyuan Qi</strong>. Desde esta perspectiva, el Qi no es una "energía" intangible o mística, sino la sustancia fundamental del universo que integra tres aspectos: <strong>materia, energía e información (Xing, Qi, Shen)</strong>.
                 </p>
@@ -525,118 +553,83 @@ export default function App() {
               </div>
             </div>
 
-            {/* SECTION 2: ¿Para qué sirve Zhineng Qigong? (Beneficios) */}
             <div className="space-y-6">
               <div className="text-center space-y-2">
-                <span className="px-3 py-1 bg-red-100 text-red-900 rounded-full text-xs font-bold uppercase tracking-wider">Impacto Integral</span>
-                <h3 className="text-2xl sm:text-3xl font-bold text-slate-800 font-serif">¿Para qué sirve Zhineng Qigong?</h3>
-                <p className="text-slate-600 text-xs sm:text-sm">La práctica regular actúa sobre tres niveles clave de la vida cotidiana:</p>
+                <span className="px-3 py-1 bg-red-100 dark:bg-red-950 text-red-900 dark:text-red-300 rounded-full text-xs font-bold uppercase tracking-wider">Impacto Integral</span>
+                <h3 className="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-slate-100 font-serif">¿Para qué sirve Zhineng Qigong?</h3>
+                <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">La práctica regular actúa sobre tres niveles clave de la vida cotidiana:</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                
-                {/* Level 1: Salud Física y Autorregulación */}
-                <div className="bg-white rounded-3xl p-6 shadow-sm border border-red-50 flex flex-col justify-between hover:shadow-md transition-all">
+                <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-red-50 dark:border-slate-700 flex flex-col justify-between hover:shadow-md transition-all">
                   <div>
-                    <div className="w-12 h-12 bg-red-100 text-red-800 rounded-2xl flex items-center justify-center mb-4">
+                    <div className="w-12 h-12 bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-400 rounded-2xl flex items-center justify-center mb-4">
                       <Shield className="w-6 h-6" />
                     </div>
-                    <h4 className="font-bold text-slate-800 text-base mb-3 font-serif">Salud Física y Autorregulación</h4>
-                    <ul className="space-y-2.5 text-xs text-slate-600">
-                      <li className="flex items-start gap-2">
-                        <span className="text-red-700 font-bold">•</span>
-                        <span>Mejora la movilidad articular, la flexibilidad y la postura corporal.</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-red-700 font-bold">•</span>
-                        <span>Optimiza el funcionamiento del sistema inmunológico y nivela el estado energético general.</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-red-700 font-bold">•</span>
-                        <span>Promueve la recuperación física y la prevención de enfermedades al equilibrar las funciones del cuerpo.</span>
-                      </li>
+                    <h4 className="font-bold text-slate-800 dark:text-slate-100 text-base mb-3 font-serif">Salud Física y Autorregulación</h4>
+                    <ul className="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
+                      <li className="flex items-start gap-2"><span className="text-red-700 dark:text-red-400 font-bold">•</span><span>Mejora la movilidad articular, la flexibilidad y la postura corporal.</span></li>
+                      <li className="flex items-start gap-2"><span className="text-red-700 dark:text-red-400 font-bold">•</span><span>Optimiza el funcionamiento del sistema inmunológico y nivela el estado energético general.</span></li>
+                      <li className="flex items-start gap-2"><span className="text-red-700 dark:text-red-400 font-bold">•</span><span>Promueve la recuperación física y la prevención de enfermedades al equilibrar las funciones del cuerpo.</span></li>
                     </ul>
                   </div>
                 </div>
 
-                {/* Level 2: Claridad Mental y Gestión del Estrés */}
-                <div className="bg-white rounded-3xl p-6 shadow-sm border border-red-50 flex flex-col justify-between hover:shadow-md transition-all">
+                <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-red-50 dark:border-slate-700 flex flex-col justify-between hover:shadow-md transition-all">
                   <div>
-                    <div className="w-12 h-12 bg-amber-100 text-amber-800 rounded-2xl flex items-center justify-center mb-4">
+                    <div className="w-12 h-12 bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-400 rounded-2xl flex items-center justify-center mb-4">
                       <Brain className="w-6 h-6" />
                     </div>
-                    <h4 className="font-bold text-slate-800 text-base mb-3 font-serif">Claridad Mental y Gestión del Estrés</h4>
-                    <ul className="space-y-2.5 text-xs text-slate-600">
-                      <li className="flex items-start gap-2">
-                        <span className="text-amber-700 font-bold">•</span>
-                        <span>Calma el sistema nervioso, reduciendo progresivamente los niveles de ansiedad y fatiga mental.</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-amber-700 font-bold">•</span>
-                        <span>Aumenta la capacidad de concentración, el enfoque y la presencia en el momento presente.</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-amber-700 font-bold">•</span>
-                        <span>Favorece un descanso y un sueño más profundos y reparadores.</span>
-                      </li>
+                    <h4 className="font-bold text-slate-800 dark:text-slate-100 text-base mb-3 font-serif">Claridad Mental y Gestión del Estrés</h4>
+                    <ul className="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
+                      <li className="flex items-start gap-2"><span className="text-amber-700 dark:text-amber-400 font-bold">•</span><span>Calma el sistema nervioso, reduciendo progresivamente los niveles de ansiedad y fatiga mental.</span></li>
+                      <li className="flex items-start gap-2"><span className="text-amber-700 dark:text-amber-400 font-bold">•</span><span>Aumenta la capacidad de concentración, el enfoque y la presencia en el momento presente.</span></li>
+                      <li className="flex items-start gap-2"><span className="text-amber-700 dark:text-amber-400 font-bold">•</span><span>Favorece un descanso y un sueño más profundos y reparadores.</span></li>
                     </ul>
                   </div>
                 </div>
 
-                {/* Level 3: Equilibrio Emocional y Conciencia */}
-                <div className="bg-white rounded-3xl p-6 shadow-sm border border-red-50 flex flex-col justify-between hover:shadow-md transition-all">
+                <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-red-50 dark:border-slate-700 flex flex-col justify-between hover:shadow-md transition-all">
                   <div>
-                    <div className="w-12 h-12 bg-rose-100 text-rose-800 rounded-2xl flex items-center justify-center mb-4">
+                    <div className="w-12 h-12 bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-400 rounded-2xl flex items-center justify-center mb-4">
                       <Smile className="w-6 h-6" />
                     </div>
-                    <h4 className="font-bold text-slate-800 text-base mb-3 font-serif">Equilibrio Emocional y Conciencia</h4>
-                    <ul className="space-y-2.5 text-xs text-slate-600">
-                      <li className="flex items-start gap-2">
-                        <span className="text-rose-700 font-bold">•</span>
-                        <span>Ayuda a reconocer y regular las respuestas emocionales sin reaccionar de forma impulsiva.</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-rose-700 font-bold">•</span>
-                        <span>Desarrolla un estado interior de serenidad, paciencia y estabilidad (<em>Tiao Xin</em>).</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-rose-700 font-bold">•</span>
-                        <span>Aumenta la autoconciencia, facilitando una relación más armónica con uno mismo y con el entorno.</span>
-                      </li>
+                    <h4 className="font-bold text-slate-800 dark:text-slate-100 text-base mb-3 font-serif">Equilibrio Emocional y Conciencia</h4>
+                    <ul className="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
+                      <li className="flex items-start gap-2"><span className="text-rose-700 dark:text-rose-400 font-bold">•</span><span>Ayuda a reconocer y regular las respuestas emocionales sin reaccionar de forma impulsiva.</span></li>
+                      <li className="flex items-start gap-2"><span className="text-rose-700 dark:text-rose-400 font-bold">•</span><span>Desarrolla un estado interior de serenidad, paciencia y estabilidad (<em>Tiao Xin</em>).</span></li>
+                      <li className="flex items-start gap-2"><span className="text-rose-700 dark:text-rose-400 font-bold">•</span><span>Aumenta la autoconciencia, facilitando una relación más armónica con uno mismo y con el entorno.</span></li>
                     </ul>
                   </div>
                 </div>
-
               </div>
             </div>
 
-            {/* Origin & Photos Grid */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-red-100 space-y-6">
-              <h3 className="text-2xl font-bold text-slate-800 font-serif flex items-center gap-2">
-                <Compass className="w-6 h-6 text-red-800" /> El Origen y el Linaje Directo
+            <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm border border-red-100 dark:border-slate-700 space-y-6">
+              <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 font-serif flex items-center gap-2">
+                <Compass className="w-6 h-6 text-red-800 dark:text-red-400" /> El Origen y el Linaje Directo
               </h3>
-              <p className="text-slate-600 text-sm leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
                 Fundado por el Dr. Pang Ming, Zhineng Qigong demostró su efectividad médica en el famoso Centro Huaxia ("el hospital sin medicinas más grande del mundo").
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <div className="rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-slate-100">
+                <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-slate-900">
                   <img src="dr. pang y helen.jpg" alt="Dr. Pang Ming y Maestra Helen" className="w-full h-56 object-cover" />
-                  <div className="p-3 text-center bg-white">
-                    <p className="text-xs font-bold text-slate-800">El Maestro Dr. Pang Ming con la Maestra Helen</p>
-                    <p className="text-[10px] text-slate-500">Fundador e instructores pioneros de Zhineng Qigong</p>
+                  <div className="p-3 text-center bg-white dark:bg-slate-800">
+                    <p className="text-xs font-bold text-slate-800 dark:text-slate-200">El Maestro Dr. Pang Ming con la Maestra Helen</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400">Fundador e instructores pioneros de Zhineng Qigong</p>
                   </div>
                 </div>
-                <div className="rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-slate-100">
+                <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-slate-900">
                   <img src="Celebrating the Chinese New Year with Teacher Pang....jpg" alt="Primera Generación de Maestros" className="w-full h-56 object-cover" />
-                  <div className="p-3 text-center bg-white">
-                    <p className="text-xs font-bold text-slate-800">Celebración con el Maestro Pang Ming</p>
-                    <p className="text-[10px] text-slate-500">Primera generación de maestros e instructores certificados</p>
+                  <div className="p-3 text-center bg-white dark:bg-slate-800">
+                    <p className="text-xs font-bold text-slate-800 dark:text-slate-200">Celebración con el Maestro Pang Ming</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400">Primera generación de maestros e instructores certificados</p>
                   </div>
                 </div>
               </div>
             </div>
-
           </div>
         )}
 
@@ -644,39 +637,39 @@ export default function App() {
         {activeTab === 'exercises' && (
           <div className="space-y-8 animate-fadeIn">
             <div className="text-center max-w-2xl mx-auto space-y-3">
-              <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-bold uppercase tracking-wider">Prácticas Oficiales</span>
-              <h2 className="text-3xl font-bold text-slate-800 font-serif">Métodos Principales de Zhineng Qigong</h2>
-              <p className="text-slate-600 text-sm">
+              <span className="px-3 py-1 bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-300 rounded-full text-xs font-bold uppercase tracking-wider">Prácticas Oficiales</span>
+              <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-serif">Métodos Principales de Zhineng Qigong</h2>
+              <p className="text-slate-600 dark:text-slate-300 text-sm">
                 Aprende la secuencia ordenada de los métodos tradicionales creados para restaurar y potenciar la salud integral.
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {EXERCISES.map((ex, index) => (
-                <div key={index} className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-red-50 flex flex-col h-full hover:shadow-md transition-shadow">
+                <div key={index} className="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm border border-red-50 dark:border-slate-700 flex flex-col h-full hover:shadow-md transition-shadow">
                   <div className="flex justify-between items-start mb-3">
-                    <span className="px-2.5 py-1 bg-red-100 text-red-900 rounded-full text-[10px] font-bold">{ex.level}</span>
-                    <span className="text-xs text-slate-500 font-medium flex items-center gap-1"><Clock className="w-3.5 h-3.5"/>{ex.duration}</span>
+                    <span className="px-2.5 py-1 bg-red-100 dark:bg-red-950 text-red-900 dark:text-red-300 rounded-full text-[10px] font-bold">{ex.level}</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 font-medium flex items-center gap-1"><Clock className="w-3.5 h-3.5"/>{ex.duration}</span>
                   </div>
-                  <h3 className="text-xl font-bold text-slate-800 font-serif">{ex.title}</h3>
-                  <p className="text-xs font-semibold text-red-800 mt-1 mb-3">{ex.subtitle}</p>
-                  <p className="text-xs text-slate-600 mb-4 leading-relaxed">{ex.description}</p>
+                  <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 font-serif">{ex.title}</h3>
+                  <p className="text-xs font-semibold text-red-800 dark:text-red-400 mt-1 mb-3">{ex.subtitle}</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">{ex.description}</p>
                   
-                  <div className="mb-4 bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                    <h4 className="text-[10px] font-bold text-slate-500 uppercase mb-2">Pasos Clave:</h4>
+                  <div className="mb-4 bg-slate-50 dark:bg-slate-900 p-3 rounded-2xl border border-slate-100 dark:border-slate-700">
+                    <h4 className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-2">Pasos Clave:</h4>
                     <ul className="space-y-1">
                       {ex.steps.map((st, sIdx) => (
-                        <li key={sIdx} className="text-xs text-slate-700 flex items-start gap-1.5">
-                          <span className="text-red-700 font-bold">•</span> <span>{st}</span>
+                        <li key={sIdx} className="text-xs text-slate-700 dark:text-slate-300 flex items-start gap-1.5">
+                          <span className="text-red-700 dark:text-red-400 font-bold">•</span> <span>{st}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
 
-                  <div className="mt-auto pt-2 border-t border-slate-100">
-                    <h4 className="text-[10px] font-bold text-slate-500 uppercase mb-2">Beneficios:</h4>
+                  <div className="mt-auto pt-2 border-t border-slate-100 dark:border-slate-700">
+                    <h4 className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-2">Beneficios:</h4>
                     <div className="flex flex-wrap gap-1.5">
                       {ex.benefits.map((b, i) => (
-                        <span key={i} className="px-2 py-0.5 bg-amber-50 text-amber-900 rounded-lg text-[10px] font-medium">{b}</span>
+                        <span key={i} className="px-2 py-0.5 bg-amber-50 dark:bg-amber-950/50 text-amber-900 dark:text-amber-300 rounded-lg text-[10px] font-medium">{b}</span>
                       ))}
                     </div>
                   </div>
@@ -691,16 +684,16 @@ export default function App() {
           !isRegistered ? <LockedContent title="Práctica Gratuita (La Qi Interactivo)" /> :
           <div className="max-w-2xl mx-auto space-y-8 animate-fadeIn">
             <div className="text-center space-y-2">
-              <span className="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold uppercase tracking-wider">Práctica Gratuita</span>
-              <h2 className="text-3xl font-bold text-slate-800 font-serif">La Qi y Meditación Interactiva</h2>
-              <p className="text-slate-600 text-sm">Sigue el pulso respiratorio visual para sincronizar la apertura (Kai) y el cierre (He) de energía.</p>
+              <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 rounded-full text-xs font-bold uppercase tracking-wider">Práctica Gratuita</span>
+              <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-serif">La Qi y Meditación Interactiva</h2>
+              <p className="text-slate-600 dark:text-slate-300 text-sm">Sigue el pulso respiratorio visual para sincronizar la apertura (Kai) y el cierre (He) de energía.</p>
             </div>
-            <div className="bg-white rounded-3xl p-8 shadow-sm border border-red-50 text-center space-y-8">
+            <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-red-50 dark:border-slate-700 text-center space-y-8">
               <div className="flex justify-center space-x-2">
                 <button
                   onClick={() => { setTimerMode('laqi'); setTimerSeconds(600); setTimerActive(false); }}
                   className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                    timerMode === 'laqi' ? 'bg-red-800 text-white shadow-md' : 'bg-slate-100 text-slate-600'
+                    timerMode === 'laqi' ? 'bg-red-800 text-white shadow-md' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                   }`}
                 >
                   La Qi (10 min)
@@ -708,7 +701,7 @@ export default function App() {
                 <button
                   onClick={() => { setTimerMode('meditation'); setTimerSeconds(1200); setTimerActive(false); }}
                   className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                    timerMode === 'meditation' ? 'bg-red-800 text-white shadow-md' : 'bg-slate-100 text-slate-600'
+                    timerMode === 'meditation' ? 'bg-red-800 text-white shadow-md' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                   }`}
                 >
                   Meditación (20 min)
@@ -716,7 +709,7 @@ export default function App() {
               </div>
 
               <div className="relative w-60 h-60 mx-auto flex items-center justify-center">
-                <div className={`absolute inset-0 rounded-full bg-red-300/30 transition-all duration-5000 ease-in-out ${
+                <div className={`absolute inset-0 rounded-full bg-red-300/30 dark:bg-red-900/30 transition-all duration-5000 ease-in-out ${
                     timerActive && timerMode === 'laqi' && laQiPhase === 'Abrir (Kai)' ? 'scale-125 opacity-50' : 'scale-90 opacity-20'
                 }`} />
                 <div className={`w-44 h-44 rounded-full bg-gradient-to-tr from-red-900 to-amber-600 shadow-xl flex flex-col items-center justify-center text-white transition-all duration-5000 ease-in-out ${
@@ -742,7 +735,7 @@ export default function App() {
                 </button>
                 <button
                   onClick={() => { setTimerActive(false); setTimerSeconds(timerMode === 'laqi' ? 600 : 1200); }}
-                  className="p-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl transition-colors"
+                  className="p-3.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-2xl transition-colors"
                 >
                   <RotateCcw className="w-4 h-4" />
                 </button>
@@ -751,12 +744,12 @@ export default function App() {
           </div>
         )}
 
-        {/* VIDEOS VIEW (PREMIUM GATED) */}
+        {/* VIDEOS VIEW */}
         {activeTab === 'videos' && (
           <LockedContent title="Videoteca Instruccional Completa" isPremiumOnly={true} />
         )}
 
-        {/* AUDIOS VIEW (PREMIUM GATED) */}
+        {/* AUDIOS VIEW */}
         {activeTab === 'audios' && (
           <LockedContent title="Biblioteca de Audios Guiados (Shuai Shou Gong y Prácticas Extensas)" isPremiumOnly={true} />
         )}
@@ -765,12 +758,11 @@ export default function App() {
         {activeTab === 'blog' && (
           <div className="space-y-8 animate-fadeIn max-w-5xl mx-auto">
             <div className="text-center max-w-2xl mx-auto space-y-3">
-              <span className="px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-xs font-bold uppercase tracking-wider">Publicaciones</span>
-              <h2 className="text-3xl font-bold text-slate-800 font-serif">Blog Qilife</h2>
-              <p className="text-slate-600 text-sm">Artículos sobre salud energética, testimonios en China y filosofía del Zhineng Qigong.</p>
+              <span className="px-3 py-1 bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 rounded-full text-xs font-bold uppercase tracking-wider">Publicaciones</span>
+              <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-serif">Blog Qilife</h2>
+              <p className="text-slate-600 dark:text-slate-300 text-sm">Artículos sobre salud energética, testimonios en China y filosofía del Zhineng Qigong.</p>
             </div>
 
-            {/* Subtabs / Category Filter */}
             <div className="flex justify-center flex-wrap gap-2">
               {['Todos', 'Filosofía', 'Práctica', 'Salud y Qi'].map(cat => (
                 <button
@@ -779,7 +771,7 @@ export default function App() {
                   className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                     selectedBlogCategory === cat 
                       ? 'bg-red-800 text-white shadow-sm' 
-                      : 'bg-white text-slate-600 border border-slate-200 hover:bg-red-50'
+                      : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-red-50 dark:hover:bg-slate-700'
                   }`}
                 >
                   {cat}
@@ -787,25 +779,24 @@ export default function App() {
               ))}
             </div>
 
-            {/* Blog Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {filteredBlogs.map(blog => (
-                <div key={blog.id} className="bg-white rounded-3xl overflow-hidden shadow-sm border border-red-50 flex flex-col justify-between hover:shadow-md transition-shadow">
+                <div key={blog.id} className="bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm border border-red-50 dark:border-slate-700 flex flex-col justify-between hover:shadow-md transition-shadow">
                   <div>
-                    <div className="h-44 overflow-hidden bg-slate-100 relative">
+                    <div className="h-44 overflow-hidden bg-slate-100 dark:bg-slate-900 relative">
                       <img src={blog.image} alt={blog.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                       <span className="absolute top-3 right-3 px-2.5 py-1 bg-red-900/80 text-white rounded-full text-[10px] font-bold backdrop-blur-sm">{blog.category}</span>
                     </div>
                     <div className="p-6">
                       <p className="text-[10px] text-slate-400 font-bold mb-1">{blog.date} • {blog.author}</p>
-                      <h3 className="font-bold text-slate-800 text-base mb-2 font-serif leading-snug">{blog.title}</h3>
-                      <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed">{blog.excerpt}</p>
+                      <h3 className="font-bold text-slate-800 dark:text-slate-100 text-base mb-2 font-serif leading-snug">{blog.title}</h3>
+                      <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-3 leading-relaxed">{blog.excerpt}</p>
                     </div>
                   </div>
                   <div className="px-6 pb-6 pt-0">
                     <button 
                       onClick={() => setActiveBlog(blog)}
-                      className="w-full py-2 bg-slate-50 hover:bg-red-50 text-red-800 rounded-xl text-xs font-bold transition-colors border border-slate-200"
+                      className="w-full py-2 bg-slate-50 dark:bg-slate-700 hover:bg-red-50 dark:hover:bg-slate-600 text-red-800 dark:text-red-300 rounded-xl text-xs font-bold transition-colors border border-slate-200 dark:border-slate-600"
                     >
                       Leer Artículo
                     </button>
@@ -817,17 +808,17 @@ export default function App() {
             {/* Modal Lector de Blog */}
             {activeBlog && (
               <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-                <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 sm:p-8 space-y-6 shadow-2xl relative animate-fadeIn">
+                <div className="bg-white dark:bg-slate-800 rounded-3xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 sm:p-8 space-y-6 shadow-2xl relative animate-fadeIn">
                   <button 
                     onClick={() => setActiveBlog(null)} 
-                    className="absolute top-4 right-4 p-2 bg-slate-100 rounded-full text-slate-600 hover:bg-slate-200"
+                    className="absolute top-4 right-4 p-2 bg-slate-100 dark:bg-slate-700 rounded-full text-slate-600 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600"
                   >
                     <X className="w-5 h-5" />
                   </button>
 
                   <div className="space-y-2">
-                    <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-[10px] font-bold">{activeBlog.category}</span>
-                    <h2 className="text-2xl sm:text-3xl font-bold text-slate-800 font-serif leading-snug">{activeBlog.title}</h2>
+                    <span className="px-3 py-1 bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-300 rounded-full text-[10px] font-bold">{activeBlog.category}</span>
+                    <h2 className="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-slate-100 font-serif leading-snug">{activeBlog.title}</h2>
                     <p className="text-xs text-slate-400 font-semibold">{activeBlog.date} • Autor: {activeBlog.author}</p>
                   </div>
 
@@ -835,11 +826,11 @@ export default function App() {
                     <img src={activeBlog.image} alt={activeBlog.title} className="w-full h-full object-cover" />
                   </div>
 
-                  <div className="text-sm text-slate-700 leading-relaxed whitespace-pre-line font-light">
+                  <div className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line font-light">
                     {activeBlog.content}
                   </div>
 
-                  <div className="pt-4 border-t border-slate-100 flex justify-end">
+                  <div className="pt-4 border-t border-slate-100 dark:border-slate-700 flex justify-end">
                     <button onClick={() => setActiveBlog(null)} className="px-6 py-2 bg-red-800 text-white rounded-xl font-bold text-xs">
                       Cerrar Lectura
                     </button>
@@ -854,35 +845,35 @@ export default function App() {
         {activeTab === 'evolucion' && (
           <div className="space-y-8 animate-fadeIn max-w-6xl mx-auto">
             <div className="text-center space-y-2 max-w-2xl mx-auto">
-              <span className="px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-xs font-bold uppercase tracking-wider">Bitácora Personal</span>
-              <h2 className="text-3xl font-bold text-slate-800 font-serif">Mi Evolución en Zhineng Qigong</h2>
-              <p className="text-slate-600 text-sm">Visualiza tus métricas de práctica constante y registra tus percepciones del flujo de Qi.</p>
+              <span className="px-3 py-1 bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 rounded-full text-xs font-bold uppercase tracking-wider">Bitácora Personal</span>
+              <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-serif">Mi Evolución en Zhineng Qigong</h2>
+              <p className="text-slate-600 dark:text-slate-300 text-sm">Visualiza tus métricas de práctica constante y registra tus percepciones del flujo de Qi.</p>
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               {[
-                { label: 'Sesiones Totales', val: '14', icon: Activity, color: 'text-red-800', bg: 'bg-red-100/60' },
-                { label: 'Minutos Practicados', val: '275', icon: Clock, color: 'text-amber-800', bg: 'bg-amber-100/60' },
-                { label: 'Días de Racha', val: '5', icon: TrendingUp, color: 'text-rose-800', bg: 'bg-rose-100/60' }
+                { label: 'Sesiones Totales', val: '14', icon: Activity, color: 'text-red-800 dark:text-red-400', bg: 'bg-red-100/60 dark:bg-red-950/50' },
+                { label: 'Minutos Practicados', val: '275', icon: Clock, color: 'text-amber-800 dark:text-amber-400', bg: 'bg-amber-100/60 dark:bg-amber-950/50' },
+                { label: 'Días de Racha', val: '5', icon: TrendingUp, color: 'text-rose-800 dark:text-rose-400', bg: 'bg-rose-100/60 dark:bg-rose-950/50' }
               ].map((stat, i) => (
-                <div key={i} className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center">
+                <div key={i} className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center text-center">
                   <div className={`w-12 h-12 ${stat.bg} ${stat.color} rounded-full flex items-center justify-center mb-3`}>
                     <stat.icon className="w-6 h-6" />
                   </div>
-                  <h3 className="text-3xl font-black text-slate-800">{stat.val}</h3>
-                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mt-1">{stat.label}</p>
+                  <h3 className="text-3xl font-black text-slate-800 dark:text-slate-100">{stat.val}</h3>
+                  <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-1">{stat.label}</p>
                 </div>
               ))}
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="space-y-8">
-                <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                  <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center font-serif"><BarChart2 className="w-5 h-5 mr-2 text-red-800"/>Frecuencia (Últimos 7 días)</h3>
+                <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700">
+                  <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6 flex items-center font-serif"><BarChart2 className="w-5 h-5 mr-2 text-red-800 dark:text-red-400"/>Frecuencia (Últimos 7 días)</h3>
                   <div className="flex items-end justify-between h-40 space-x-2">
                     {[30, 45, 0, 20, 60, 25, 45].map((val, i) => (
                       <div key={i} className="flex flex-col items-center flex-1 h-full justify-end">
-                        <div className="w-full bg-red-200 rounded-t-lg relative group transition-all hover:bg-red-800" style={{ height: `${(val / 60) * 100}%`, minHeight: '6px' }}>
+                        <div className="w-full bg-red-200 dark:bg-red-950/60 rounded-t-lg relative group transition-all hover:bg-red-800" style={{ height: `${(val / 60) * 100}%`, minHeight: '6px' }}>
                           <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white text-[10px] py-0.5 px-2 rounded opacity-0 group-hover:opacity-100">{val}m</div>
                         </div>
                         <span className="text-[10px] text-slate-400 mt-2 font-bold uppercase">{['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa', 'Do'][i]}</span>
@@ -891,13 +882,13 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
-                  <h3 className="text-base font-bold text-slate-800 mb-4 font-serif">Registrar Sesión y Sensaciones</h3>
+                <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700">
+                  <h3 className="text-base font-bold text-slate-800 dark:text-slate-100 mb-4 font-serif">Registrar Sesión y Sensaciones</h3>
                   <form onSubmit={handleAddJournalEntry} className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Método</label>
-                        <select value={newPracticeName} onChange={e => setNewPracticeName(e.target.value)} className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-red-600 text-xs">
+                        <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Método</label>
+                        <select value={newPracticeName} onChange={e => setNewPracticeName(e.target.value)} className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 text-xs">
                           <option>Zu Chang Fa</option>
                           <option>La Qi</option>
                           <option>Peng Qi Guan Ding Fa</option>
@@ -907,33 +898,33 @@ export default function App() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Duración</label>
-                        <select value={newDuration} onChange={e => setNewDuration(e.target.value)} className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-red-600 text-xs">
+                        <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Duración</label>
+                        <select value={newDuration} onChange={e => setNewDuration(e.target.value)} className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 text-xs">
                           <option>10 min</option><option>15 min</option><option>30 min</option><option>45 min</option>
                         </select>
                       </div>
                     </div>
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Anotación sobre el Qi</label>
-                      <textarea rows="2" value={newNote} onChange={e => setNewNote(e.target.value)} placeholder="¿Qué cambios fácticos o térmicos percibiste?" className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-red-600 text-xs resize-none"/>
+                      <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Anotación sobre el Qi</label>
+                      <textarea rows="2" value={newNote} onChange={e => setNewNote(e.target.value)} placeholder="¿Qué cambios fácticos o térmicos percibiste?" className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 text-xs resize-none"/>
                     </div>
                     <button type="submit" className="w-full py-2.5 bg-red-800 hover:bg-red-900 text-white rounded-xl text-xs font-bold transition-colors">Guardar en Registro</button>
                   </form>
                 </div>
               </div>
 
-              <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
-                <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center font-serif"><BookOpen className="w-5 h-5 mr-2 text-red-800"/>Historial de Registro</h3>
+              <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700">
+                <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6 flex items-center font-serif"><BookOpen className="w-5 h-5 mr-2 text-red-800 dark:text-red-400"/>Historial de Registro</h3>
                 <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
                   {journalEntries.map(entry => (
-                    <div key={entry.id} className="relative pl-6 border-l-2 border-red-100 pb-4 last:border-0 last:pb-0">
-                      <div className="absolute w-3 h-3 bg-red-700 rounded-full -left-[7px] top-1.5 ring-4 ring-white"></div>
-                      <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                    <div key={entry.id} className="relative pl-6 border-l-2 border-red-100 dark:border-slate-700 pb-4 last:border-0 last:pb-0">
+                      <div className="absolute w-3 h-3 bg-red-700 rounded-full -left-[7px] top-1.5 ring-4 ring-white dark:ring-slate-800"></div>
+                      <div className="bg-slate-50 dark:bg-slate-900 rounded-2xl p-4 border border-slate-100 dark:border-slate-700">
                         <div className="flex justify-between items-start mb-2">
-                          <span className="px-2 py-0.5 bg-red-100 text-red-900 rounded-lg text-[10px] font-bold">{entry.practice}</span>
+                          <span className="px-2 py-0.5 bg-red-100 dark:bg-red-950 text-red-900 dark:text-red-300 rounded-lg text-[10px] font-bold">{entry.practice}</span>
                           <span className="text-[10px] text-slate-400 flex gap-2"><Calendar className="w-3 h-3"/>{entry.date} <Clock className="w-3 h-3"/>{entry.duration}</span>
                         </div>
-                        <p className="text-slate-700 text-xs leading-relaxed">{entry.notes}</p>
+                        <p className="text-slate-700 dark:text-slate-300 text-xs leading-relaxed">{entry.notes}</p>
                       </div>
                     </div>
                   ))}
@@ -943,59 +934,57 @@ export default function App() {
           </div>
         )}
 
-        {/* INSTRUCTOR VIEW WITH PERSONAL & LINEAGE GALLERY */}
+        {/* INSTRUCTOR VIEW */}
         {activeTab === 'instructor' && (
           <div className="max-w-4xl mx-auto space-y-8 animate-fadeIn">
-            {/* Instructor Profile Header */}
-            <div className="bg-white rounded-3xl p-8 shadow-sm border border-red-50 flex flex-col md:flex-row items-center gap-8">
-              <div className="w-48 h-48 rounded-full overflow-hidden shrink-0 shadow-lg border-4 border-red-100 bg-slate-100">
+            <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-red-50 dark:border-slate-700 flex flex-col md:flex-row items-center gap-8">
+              <div className="w-48 h-48 rounded-full overflow-hidden shrink-0 shadow-lg border-4 border-red-100 dark:border-slate-700 bg-slate-100">
                 <img src="jose_practicando.jpg" alt="José Antonio Cano Practicando" className="w-full h-full object-cover" />
               </div>
               <div className="space-y-4 text-center md:text-left">
                 <div>
-                  <span className="px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-xs font-bold uppercase tracking-wider">Instructor Certificado</span>
-                  <h2 className="text-3xl font-bold text-slate-800 font-serif mt-2">José Antonio Cano</h2>
+                  <span className="px-3 py-1 bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 rounded-full text-xs font-bold uppercase tracking-wider">Instructor Certificado</span>
+                  <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-serif mt-2">José Antonio Cano</h2>
                 </div>
-                <p className="text-slate-600 text-sm leading-relaxed">
+                <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
                   Con formación directa en Beijing y el linaje original de los discípulos de la primera generación del Dr. Pang Ming, mi vocación es transmitir la esencia del Zhineng Qigong de forma pura, accesible e integradora.
                 </p>
-                <p className="text-xs text-red-900 italic font-serif">
+                <p className="text-xs text-red-900 dark:text-red-400 italic font-serif">
                   "El verdadero maestro se despierta cuando el alumno conecta con la fuente inagotable de su propio Hunyuan Qi."
                 </p>
               </div>
             </div>
 
-            {/* Photo Gallery: Lineage, Certification & Journey in China */}
-            <div className="bg-white rounded-3xl p-8 shadow-sm border border-red-50 space-y-6">
-              <div className="border-b border-slate-100 pb-4">
-                <h3 className="text-2xl font-bold text-slate-800 font-serif flex items-center gap-2">
-                  <Award className="w-6 h-6 text-amber-700" /> Certificación y Linaje en China
+            <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-red-50 dark:border-slate-700 space-y-6">
+              <div className="border-b border-slate-100 dark:border-slate-700 pb-4">
+                <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 font-serif flex items-center gap-2">
+                  <Award className="w-6 h-6 text-amber-700 dark:text-amber-400" /> Certificación y Linaje en China
                 </h3>
-                <p className="text-xs text-slate-500 mt-1">Imágenes de la graduación con los Maestros Karl y Helen, y la estancia de estudio en Beijing.</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Imágenes de la graduación con los Maestros Karl y Helen, y la estancia de estudio en Beijing.</p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <div className="rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-slate-50">
+                <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-50 dark:bg-slate-900">
                   <img src="16.jpg" alt="Entrega de Certificación con Maestros Karl y Helen" className="w-full h-48 object-cover" />
                   <div className="p-3">
-                    <p className="text-xs font-bold text-slate-800">Certificación de Instructor</p>
-                    <p className="text-[10px] text-slate-500">Junto a los Maestros Karl y Helen en China</p>
+                    <p className="text-xs font-bold text-slate-800 dark:text-slate-200">Certificación de Instructor</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400">Junto a los Maestros Karl y Helen en China</p>
                   </div>
                 </div>
 
-                <div className="rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-slate-50">
+                <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-50 dark:bg-slate-900">
                   <img src="15.jpg" alt="Graduación de Zhineng Qigong" className="w-full h-48 object-cover" />
                   <div className="p-3">
-                    <p className="text-xs font-bold text-slate-800">Graduación y Reconocimiento</p>
-                    <p className="text-[10px] text-slate-500">Formación directa en los métodos avanzados</p>
+                    <p className="text-xs font-bold text-slate-800 dark:text-slate-200">Graduación y Reconocimiento</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400">Formación directa en los métodos avanzados</p>
                   </div>
                 </div>
 
-                <div className="rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-slate-50">
+                <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-50 dark:bg-slate-900">
                   <img src="13.jpg" alt="Estancia de Formación en Beijing" className="w-full h-48 object-cover" />
                   <div className="p-3">
-                    <p className="text-xs font-bold text-slate-800">Estancia en Beijing</p>
-                    <p className="text-[10px] text-slate-500">Práctica e inmersión en la Ciudad Prohibida</p>
+                    <p className="text-xs font-bold text-slate-800 dark:text-slate-200">Estancia en Beijing</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400">Práctica e inmersión en la Ciudad Prohibida</p>
                   </div>
                 </div>
               </div>
@@ -1007,14 +996,14 @@ export default function App() {
         {activeTab === 'community' && (
           <div className="space-y-8 animate-fadeIn max-w-4xl mx-auto">
             <div className="text-center max-w-2xl mx-auto space-y-2">
-              <span className="px-3 py-1 bg-rose-100 text-rose-900 rounded-full text-xs font-bold uppercase tracking-wider">Campo Colectivo</span>
-              <h2 className="text-3xl font-bold text-slate-800 font-serif">Comunidad Activa Qilife</h2>
-              <p className="text-slate-600 text-sm">Comparte tus avances, testimonios y percepciones con otros practicantes de la red.</p>
+              <span className="px-3 py-1 bg-rose-100 dark:bg-rose-950 text-rose-900 dark:text-rose-300 rounded-full text-xs font-bold uppercase tracking-wider">Campo Colectivo</span>
+              <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-serif">Comunidad Activa Qilife</h2>
+              <p className="text-slate-600 dark:text-slate-300 text-sm">Comparte tus avances, testimonios y percepciones con otros practicantes de la red.</p>
             </div>
             
-            <div className="bg-white rounded-3xl p-6 shadow-sm border border-red-50">
+            <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-red-50 dark:border-slate-700">
               <form onSubmit={handleAddPost} className="flex gap-4">
-                <div className="w-10 h-10 bg-red-100 text-red-800 rounded-full flex items-center justify-center font-bold shrink-0">
+                <div className="w-10 h-10 bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-400 rounded-full flex items-center justify-center font-bold shrink-0">
                   {formData.nombre ? formData.nombre.charAt(0).toUpperCase() : 'P'}
                 </div>
                 <div className="flex-1 space-y-3">
@@ -1022,7 +1011,7 @@ export default function App() {
                     value={newPost} 
                     onChange={e => setNewPost(e.target.value)} 
                     placeholder="¿Qué cambios positivos has experimentado con tu práctica de Qi?" 
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-red-600 bg-slate-50 text-xs resize-none"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 text-xs resize-none"
                     rows="3"
                   />
                   <button type="submit" disabled={!newPost.trim()} className="px-6 py-2 bg-red-800 text-white rounded-xl shadow-md hover:bg-red-900 disabled:opacity-50 font-bold text-xs">
@@ -1034,17 +1023,17 @@ export default function App() {
 
             <div className="space-y-4">
               {communityPosts.map(post => (
-                <div key={post.id} className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex gap-4">
-                   <div className="w-10 h-10 bg-slate-100 text-slate-700 rounded-full flex items-center justify-center font-bold shrink-0">
+                <div key={post.id} className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 flex gap-4">
+                   <div className="w-10 h-10 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full flex items-center justify-center font-bold shrink-0">
                     {post.author.charAt(0).toUpperCase()}
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="font-bold text-slate-800 text-xs">{post.author}</span>
+                      <span className="font-bold text-slate-800 dark:text-slate-100 text-xs">{post.author}</span>
                       <span className="text-[10px] text-slate-400">• {post.date}</span>
                     </div>
-                    <p className="text-slate-700 text-xs leading-relaxed mb-3">{post.content}</p>
-                    <button className="flex items-center gap-1 text-[11px] font-bold text-red-800 hover:text-red-950 transition-colors">
+                    <p className="text-slate-700 dark:text-slate-300 text-xs leading-relaxed mb-3">{post.content}</p>
+                    <button className="flex items-center gap-1 text-[11px] font-bold text-red-800 dark:text-red-400 hover:text-red-950 transition-colors">
                       <Heart className="w-3.5 h-3.5" /> {post.likes} Me gusta
                     </button>
                   </div>
@@ -1058,25 +1047,25 @@ export default function App() {
         {activeTab === 'premium' && (
           <div className="space-y-8 animate-fadeIn max-w-5xl mx-auto">
             <div className="text-center max-w-2xl mx-auto space-y-3">
-              <span className="px-3 py-1 bg-amber-100 text-amber-900 rounded-full text-xs font-bold tracking-wider uppercase">Membresía Exclusiva</span>
-              <h2 className="text-3xl sm:text-4xl font-bold text-slate-800 font-serif">Planes Qilife</h2>
-              <p className="text-slate-600 text-sm">Elige la modalidad que mejor se adapte a tus metas de práctica e inmersión.</p>
+              <span className="px-3 py-1 bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 rounded-full text-xs font-bold tracking-wider uppercase">Membresía Exclusiva</span>
+              <h2 className="text-3xl sm:text-4xl font-bold text-slate-800 dark:text-slate-100 font-serif">Planes Qilife</h2>
+              <p className="text-slate-600 dark:text-slate-300 text-sm">Elige la modalidad que mejor se adapte a tus metas de práctica e inmersión.</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
               
-              <div className="bg-white rounded-3xl p-8 border-2 border-slate-100 shadow-sm flex flex-col justify-between">
+              <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 border-2 border-slate-100 dark:border-slate-700 shadow-sm flex flex-col justify-between">
                 <div>
-                  <h3 className="text-2xl font-bold text-slate-800 mb-2 font-serif">Plan Gratuito</h3>
-                  <p className="text-slate-500 text-xs mb-6">Acceso a la práctica esencial e interactiva.</p>
-                  <div className="text-4xl font-black text-slate-800 mb-6">$0 <span className="text-xs text-slate-400 font-normal">/ siempre</span></div>
+                  <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-2 font-serif">Plan Gratuito</h3>
+                  <p className="text-slate-500 dark:text-slate-400 text-xs mb-6">Acceso a la práctica esencial e interactiva.</p>
+                  <div className="text-4xl font-black text-slate-800 dark:text-slate-100 mb-6">$0 <span className="text-xs text-slate-400 font-normal">/ siempre</span></div>
                   <ul className="space-y-3 mb-8 text-xs">
-                    <li className="flex items-center text-slate-600"><CheckCircle className="w-4 h-4 text-emerald-600 mr-2.5" /> Temporizador interactivo de La Qi</li>
-                    <li className="flex items-center text-slate-600"><CheckCircle className="w-4 h-4 text-emerald-600 mr-2.5" /> Audio base de Zu Chang Fa</li>
-                    <li className="flex items-center text-slate-600"><CheckCircle className="w-4 h-4 text-emerald-600 mr-2.5" /> Registro en bitácora personal</li>
-                    <li className="flex items-center text-slate-400"><Lock className="w-4 h-4 text-slate-300 mr-2.5" /> Videoteca guiada completa</li>
+                    <li className="flex items-center text-slate-600 dark:text-slate-300"><CheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mr-2.5" /> Temporizador interactivo de La Qi</li>
+                    <li className="flex items-center text-slate-600 dark:text-slate-300"><CheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mr-2.5" /> Audio base de Zu Chang Fa</li>
+                    <li className="flex items-center text-slate-600 dark:text-slate-300"><CheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mr-2.5" /> Registro en bitácora personal</li>
+                    <li className="flex items-center text-slate-400"><Lock className="w-4 h-4 text-slate-300 dark:text-slate-600 mr-2.5" /> Videoteca guiada completa</li>
                   </ul>
                 </div>
-                <button onClick={() => setActiveTab('home')} className="w-full py-3 rounded-xl font-bold text-red-900 bg-red-50 hover:bg-red-100 transition-colors text-xs">
+                <button onClick={() => setActiveTab('home')} className="w-full py-3 rounded-xl font-bold text-red-900 dark:text-red-400 bg-red-50 dark:bg-slate-700 hover:bg-red-100 dark:hover:bg-slate-600 transition-colors text-xs">
                   Ir a Registro Gratuito
                 </button>
               </div>
@@ -1109,7 +1098,7 @@ export default function App() {
 
         {/* AI COACH VIEW */}
         {activeTab === 'ia' && (
-          <div className="max-w-3xl mx-auto h-[580px] flex flex-col bg-white rounded-3xl shadow-sm border border-red-50 overflow-hidden animate-fadeIn">
+          <div className="max-w-3xl mx-auto h-[580px] flex flex-col bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-red-50 dark:border-slate-700 overflow-hidden animate-fadeIn">
             <div className="bg-gradient-to-r from-red-900 to-red-800 text-white p-4 flex items-center gap-3 shadow-sm z-10">
               <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center shrink-0"><Bot className="w-6 h-6" /></div>
               <div>
@@ -1118,17 +1107,17 @@ export default function App() {
               </div>
             </div>
             
-            <div className="flex-1 p-5 overflow-y-auto space-y-4 bg-slate-50/60">
+            <div className="flex-1 p-5 overflow-y-auto space-y-4 bg-slate-50/60 dark:bg-slate-900/60">
               {chatMessages.map((msg, idx) => (
                 <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-3 shadow-sm ${msg.role === 'user' ? 'bg-red-800 text-white rounded-br-none' : 'bg-white border border-slate-100 text-slate-700 rounded-bl-none text-xs'}`}>
+                  <div className={`max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-3 shadow-sm ${msg.role === 'user' ? 'bg-red-800 text-white rounded-br-none' : 'bg-white dark:bg-slate-700 border border-slate-100 dark:border-slate-600 text-slate-700 dark:text-slate-100 rounded-bl-none text-xs'}`}>
                     <p className="text-xs leading-relaxed whitespace-pre-wrap">{msg.text}</p>
                   </div>
                 </div>
               ))}
               {isAiTyping && (
                 <div className="flex justify-start">
-                  <div className="bg-white border border-slate-100 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm flex gap-1.5">
+                  <div className="bg-white dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm flex gap-1.5">
                     <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce"></div>
                     <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{animationDelay:'0.2s'}}></div>
                     <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{animationDelay:'0.4s'}}></div>
@@ -1138,9 +1127,9 @@ export default function App() {
               <div ref={messagesEndRef} />
             </div>
             
-            <div className="p-3 bg-white border-t border-slate-100">
+            <div className="p-3 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700">
               <form onSubmit={handleSendChatMessage} className="flex gap-2">
-                <input type="text" value={chatInput} onChange={e => setChatInput(e.target.value)} placeholder="Escribe tu consulta sobre la práctica..." className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-red-600 bg-slate-50 text-xs"/>
+                <input type="text" value={chatInput} onChange={e => setChatInput(e.target.value)} placeholder="Escribe tu consulta sobre la práctica..." className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 text-xs"/>
                 <button type="submit" disabled={!chatInput.trim() || isAiTyping} className="px-4 py-2.5 bg-red-800 text-white rounded-xl shadow-md hover:bg-red-900 disabled:opacity-50 flex items-center justify-center">
                   <Send className="w-4 h-4" />
                 </button>
@@ -1150,9 +1139,9 @@ export default function App() {
         )}
       </main>
 
-      <footer className="bg-white border-t border-red-100 py-6 text-center text-xs text-slate-500 mt-auto">
-        <p className="font-serif text-slate-700">Qilife • Ciencia de la Conciencia y el Qi (混元灵通)</p>
-        <p className="text-[10px] text-slate-400 mt-1">Instructor José Antonio Cano — Formación e Inmersión en el Beijing Wisdom Healing Center, China</p>
+      <footer className="bg-white dark:bg-slate-800 border-t border-red-100 dark:border-slate-700 py-6 text-center text-xs text-slate-500 dark:text-slate-400 mt-auto">
+        <p className="font-serif text-slate-700 dark:text-slate-300">Qilife • Ciencia de la Conciencia y el Qi (混元灵通)</p>
+        <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">Instructor José Antonio Cano — Formación e Inmersión en el Beijing Wisdom Healing Center, China</p>
       </footer>
     </div>
   );
