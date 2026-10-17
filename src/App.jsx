@@ -347,76 +347,69 @@ export default function App() {
       
       {/* HEADER / NAVEGACIÓN */}
       <header className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-red-100/60 dark:border-slate-700">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col lg:flex-row justify-between items-center gap-3">
-          
-          <div className="flex items-center justify-between w-full lg:w-auto">
-            <div className="flex items-center space-x-3 cursor-pointer group" onClick={() => setActiveTab('home')}>
-              <img 
-                src="logo_qilife.png" 
-                alt="Qilife Logo" 
-                className="w-12 h-12 object-contain group-hover:scale-105 transition-transform" 
-                onError={(e) => { e.target.style.display = 'none'; }}
-              />
-              <div>
-                <h1 className="text-2xl font-black text-red-900 dark:text-red-400 tracking-tight font-serif">Qilife</h1>
-                <p className="text-[9px] text-amber-700 dark:text-amber-400 font-bold tracking-widest uppercase">Zhineng Qigong</p>
-              </div>
-            </div>
+  <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
+    
+    {/* LOGO */}
+    <div className="flex items-center space-x-3 cursor-pointer group" onClick={() => setActiveTab('home')}>
+      <img 
+        src="logo_qilife.png" 
+        alt="Qilife Logo" 
+        className="w-12 h-12 object-contain group-hover:scale-105 transition-transform" 
+        onError={(e) => { e.target.style.display = 'none'; }}
+      />
+      <div>
+        <h1 className="text-2xl font-black text-red-900 dark:text-red-400 tracking-tight font-serif">Qilife</h1>
+        <p className="text-[9px] text-amber-700 dark:text-amber-400 font-bold tracking-widest uppercase">Zhineng Qigong</p>
+      </div>
+    </div>
 
-            {/* BOTÓN MODO OSCURO EN MÓVILES */}
-            <button 
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className="lg:hidden p-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200"
-            >
-              {isDarkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-slate-700" />}
-            </button>
-          </div>
+    {/* NAVEGACIÓN Y BOTÓN MODO OSCURO */}
+    <nav className="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 bg-slate-50/80 dark:bg-slate-900/80 p-1.5 rounded-2xl border border-red-100/80 dark:border-slate-700 shadow-inner">
+      {[
+        { id: 'home', label: 'Inicio' },
+        { id: 'about_zq', label: '¿Qué es ZQ?' },
+        { id: 'exercises', label: 'Métodos' },
+        { id: 'timer', label: 'Práctica' },
+        { id: 'videos', label: 'Videos' },
+        { id: 'audios', label: 'Audios' },
+        { id: 'blog', label: 'Blog' },
+        { id: 'evolucion', label: 'Mi Evolución' },
+        { id: 'instructor', label: 'Instructor' },
+        { id: 'community', label: 'Comunidad' }
+      ].map(tab => (
+        <button
+          key={tab.id}
+          onClick={() => setActiveTab(tab.id)}
+          className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+            activeTab === tab.id
+              ? 'bg-red-800 text-white shadow-md'
+              : 'text-slate-600 dark:text-slate-300 hover:text-red-900 dark:hover:text-red-400 hover:bg-red-50/60 dark:hover:bg-slate-800'
+          }`}
+        >
+          {tab.label}
+        </button>
+      ))}
 
-          <nav className="flex flex-wrap justify-center gap-1 sm:gap-1.5 bg-slate-50/80 dark:bg-slate-900/80 p-1.5 rounded-2xl border border-red-100/80 dark:border-slate-700 shadow-inner">
-            {[
-              { id: 'home', label: 'Inicio' },
-              { id: 'about_zq', label: '¿Qué es ZQ?' },
-              { id: 'exercises', label: 'Métodos' },
-              { id: 'timer', label: 'Práctica' },
-              { id: 'videos', label: 'Videos' },
-              { id: 'audios', label: 'Audios' },
-              { id: 'blog', label: 'Blog' },
-              { id: 'evolucion', label: 'Mi Evolución' },
-              { id: 'instructor', label: 'Instructor' },
-              { id: 'community', label: 'Comunidad' }
-            ].map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
-                  activeTab === tab.id
-                    ? 'bg-red-800 text-white shadow-md'
-                    : 'text-slate-600 dark:text-slate-300 hover:text-red-900 dark:hover:text-red-400 hover:bg-red-50/60 dark:hover:bg-slate-800'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-            <button
-              onClick={() => setActiveTab('ia')}
-              className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 ${
-                activeTab === 'ia' ? 'bg-amber-700 text-white shadow-md' : 'text-amber-800 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-slate-800'
-              }`}
-            >
-              <Bot className="w-3.5 h-3.5" /> IA
-            </button>
-          </nav>
+      <button
+        onClick={() => setActiveTab('ia')}
+        className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 ${
+          activeTab === 'ia' ? 'bg-amber-700 text-white shadow-md' : 'text-amber-800 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-slate-800'
+        }`}
+      >
+        <Bot className="w-3.5 h-3.5" /> IA
+      </button>
 
-          {/* BOTÓN MODO OSCURO EN ESCRITORIO */}
-          <button 
-            onClick={() => setIsDarkMode(!isDarkMode)}
-            className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold hover:bg-slate-200 dark:hover:bg-slate-600 transition"
-          >
-            {isDarkMode ? <><Sun className="w-4 h-4 text-amber-400" /> Claro</> : <><Moon className="w-4 h-4 text-slate-700" /> Oscuro</>}
-          </button>
+      {/* BOTÓN MODO OSCURO (SIEMPRE VISIBLE) */}
+      <button
+        onClick={() => setIsDarkMode(!isDarkMode)}
+        className="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-300 dark:hover:bg-slate-600 ml-1"
+      >
+        {isDarkMode ? <><Sun className="w-3.5 h-3.5 text-amber-400" /> Claro</> : <><Moon className="w-3.5 h-3.5 text-slate-700 dark:text-slate-200" /> Oscuro</>}
+      </button>
+    </nav>
 
-        </div>
-      </header>
+  </div>
+</header>
 
       {/* CONTENEDOR PRINCIPAL CON ADAPTABILIDAD DE PANTALLA PARA COMPUTADORAS */}
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-8">
