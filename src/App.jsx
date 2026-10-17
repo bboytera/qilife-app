@@ -13,7 +13,7 @@ const EXERCISES = [
     id: 'Zu Chang Fa',
     title: 'Zu Chang Fa (Organización del Campo de Qi)',
     subtitle: 'Base indispensable para toda práctica de Zhineng Qigong',
-    duration: '10-20 min',
+    duration: '19 min',
     level: 'Todos los niveles',
     description: 'Alinear la mente con el universo y relajar profundamente el cuerpo. Establece una conexión pura con el Hunyuan Qi primordial antes de iniciar cualquier método o sanación.',
     steps: [
@@ -29,7 +29,7 @@ const EXERCISES = [
     id: 'la-qi',
     title: 'La Qi (Abrir y Cerrar con las Manos)',
     subtitle: 'Práctica esencial para sentir y acumular el Campo de Qi',
-    duration: '10-15 min',
+    duration: '6 min',
     level: 'Todos los niveles',
     description: 'Reunir Qi entre las manos mediante movimientos rítmicos de apertura (Kai) y cierre (He). Disuelve tensiones y moviliza la energía hacia los órganos.',
     steps: [
@@ -173,9 +173,12 @@ export default function App() {
     }
   }, []);
   
-  // Temporizador interactivo
+  // Referencia para Reproductor de Audio
+  const audioRef = useRef(null);
+
+  // Temporizador interactivo (6 min = 360 seg para La Qi, 19 min = 1140 seg para Zu Chang Fa)
   const [timerActive, setTimerActive] = useState(false);
-  const [timerSeconds, setTimerSeconds] = useState(600);
+  const [timerSeconds, setTimerSeconds] = useState(360);
   const [timerMode, setTimerMode] = useState('laqi'); 
   const [laQiPhase, setLaQiPhase] = useState('Abrir (Kai)');
   
@@ -195,8 +198,9 @@ export default function App() {
   ]);
   const [newPost, setNewPost] = useState('');
 
-  // Formulario
+  // Formulario y Validaciones
   const [formData, setFormData] = useState({ nombre: '', email: '', whatsapp: '' });
+  const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Blog
@@ -236,6 +240,9 @@ export default function App() {
       }, 1000);
     } else if (timerSeconds === 0) {
       setTimerActive(false);
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
     }
     return () => clearInterval(interval);
   }, [timerActive, timerSeconds, timerMode]);
@@ -274,27 +281,49 @@ export default function App() {
     setNewPost('');
   };
 
+  // MANEJADOR DE REGISTRO CON VALIDACIONES
   const handleContactSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.nombre || !formData.email) return;
+    setFormError('');
+
+    // 1. Validar Nombre
+    if (!formData.nombre.trim() || formData.nombre.trim().length < 2) {
+      setFormError('Por favor, ingresa tu nombre completo.');
+      return;
+    }
+
+    // 2. Validar WhatsApp (exactamente 10 dígitos)
+    const cleanPhone = formData.whatsapp.replace(/\D/g, '');
+    if (cleanPhone.length !== 10) {
+      setFormError('El número de WhatsApp debe tener exactamente 10 dígitos (ej. 3312345678).');
+      return;
+    }
+
+    // 3. Validar Correo Electrónico
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(formData.email.trim())) {
+      setFormError('Por favor, ingresa un correo electrónico válido (ej. correo@gmail.com).');
+      return;
+    }
+
     setIsSubmitting(true);
     
-    const GOOGLE_SCRIPT_URL = "AQUI_PEGA_TU_URL";
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzHiuRh4LmFmhw1YBZJwAEnMM9AzqD_ArYkiGquyDTU9tQemYe-GChiFRjXPIkMXlQugQ/exec";
 
     try {
-      if (GOOGLE_SCRIPT_URL !== "AQUI_PEGA_TU_URL") {
-        await fetch(GOOGLE_SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
-        });
-      } else {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-      }
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre: formData.nombre.trim(),
+          whatsapp: cleanPhone,
+          email: formData.email.trim()
+        })
+      });
 
       localStorage.setItem('qilife_user_registered', 'true');
-      localStorage.setItem('qilife_user_email', formData.email);
+      localStorage.setItem('qilife_user_email', formData.email.trim());
       setIsRegistered(true);
     } catch (error) {
       console.error("Error en registro:", error);
@@ -465,25 +494,67 @@ export default function App() {
                     <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100">¡Registro Completado!</h3>
                     <p className="text-sm text-slate-600 dark:text-slate-300">Has desbloqueado tus herramientas de práctica gratuita.</p>
                     <button onClick={() => setActiveTab('gratis')} className="w-full py-3 bg-red-800 hover:bg-red-900 text-white rounded-xl font-bold shadow-md transition-colors mt-2 text-sm">
-                      Iniciar Práctica La Qi
+                      Iniciar Práctica La Qi y Zu Chang Fa
                     </button>
                   </div>
                 ) : (
                   <form onSubmit={handleContactSubmit} className="space-y-3.5">
+                    {/* MENSAJE DE ERROR O ADVERTENCIA */}
+                    {formError && (
+                      <div className="p-2.5 bg-red-100 dark:bg-red-950/80 border border-red-300 dark:border-red-800 rounded-xl text-red-800 dark:text-red-300 text-xs font-semibold animate-fadeIn">
+                        ⚠️ {formError}
+                      </div>
+                    )}
+
                     <div>
                       <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase">Nombre Completo</label>
-                      <input type="text" required value={formData.nombre} onChange={e => setFormData({...formData, nombre: e.target.value})} className="w-full mt-1 px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 bg-white text-sm" placeholder="Tu nombre"/>
+                      <input 
+                        type="text" 
+                        required 
+                        value={formData.nombre} 
+                        onChange={e => {
+                          setFormData({...formData, nombre: e.target.value});
+                          if (formError) setFormError('');
+                        }} 
+                        className="w-full mt-1 px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 bg-white text-sm" 
+                        placeholder="Tu nombre completo"
+                      />
                     </div>
+
                     <div>
-                      <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase">WhatsApp</label>
-                      <input type="tel" required value={formData.whatsapp} onChange={e => setFormData({...formData, whatsapp: e.target.value})} className="w-full mt-1 px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 bg-white text-sm" placeholder="+52..."/>
+                      <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase">WhatsApp (10 dígitos)</label>
+                      <input 
+                        type="tel" 
+                        required 
+                        maxLength={10}
+                        value={formData.whatsapp} 
+                        onChange={e => {
+                          const cleanVal = e.target.value.replace(/\D/g, '');
+                          setFormData({...formData, whatsapp: cleanVal});
+                          if (formError) setFormError('');
+                        }} 
+                        className="w-full mt-1 px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 bg-white text-sm" 
+                        placeholder="10 dígitos (ej. 3312345678)"
+                      />
                     </div>
+
                     <div>
                       <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase">Correo Electrónico</label>
-                      <input type="email" required value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full mt-1 px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 bg-white text-sm" placeholder="tu@correo.com"/>
+                      <input 
+                        type="email" 
+                        required 
+                        value={formData.email} 
+                        onChange={e => {
+                          setFormData({...formData, email: e.target.value});
+                          if (formError) setFormError('');
+                        }} 
+                        className="w-full mt-1 px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 bg-white text-sm" 
+                        placeholder="tu@correo.com"
+                      />
                     </div>
+
                     <button type="submit" disabled={isSubmitting} className="w-full py-3 mt-2 rounded-xl font-bold text-white bg-red-800 hover:bg-red-900 shadow-md flex justify-center items-center gap-2 transition-colors text-sm">
-                      {isSubmitting ? 'Desbloqueando...' : <><Unlock className="w-4 h-4"/> Regístrate Gratis</>}
+                      {isSubmitting ? 'Verificando y enviando...' : <><Unlock className="w-4 h-4"/> Regístrate Gratis</>}
                     </button>
                   </form>
                 )}
@@ -704,28 +775,66 @@ export default function App() {
               <div className="text-center space-y-2">
                 <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 rounded-full text-xs font-bold uppercase tracking-wider">Plan Gratuito</span>
                 <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-serif">Zu Chang Fa y La Qi</h2>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">Sigue el pulso respiratorio visual para sincronizar la apertura (Kai) y el cierre (He) de Qi.</p>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">Escucha tu audio guiado y sigue el pulso respiratorio visual para sincronizar la práctica.</p>
               </div>
-              <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-red-50 dark:border-slate-700 text-center space-y-8">
+              
+              <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-red-50 dark:border-slate-700 text-center space-y-6">
+                
+                {/* SELECTOR DE MÉTODOS */}
                 <div className="flex justify-center space-x-2">
                   <button
-                    onClick={() => { setTimerMode('laqi'); setTimerSeconds(600); setTimerActive(false); }}
+                    onClick={() => { 
+                      setTimerMode('laqi'); 
+                      setTimerSeconds(360); 
+                      setTimerActive(false); 
+                      if (audioRef.current) {
+                        audioRef.current.pause();
+                        audioRef.current.currentTime = 0;
+                      }
+                    }}
                     className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                       timerMode === 'laqi' ? 'bg-red-800 text-white shadow-md' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                     }`}
                   >
-                    La Qi (10 min)
+                    La Qi (6 min)
                   </button>
                   <button
-                    onClick={() => { setTimerMode('meditation'); setTimerSeconds(1200); setTimerActive(false); }}
+                    onClick={() => { 
+                      setTimerMode('meditation'); 
+                      setTimerSeconds(1140); 
+                      setTimerActive(false); 
+                      if (audioRef.current) {
+                        audioRef.current.pause();
+                        audioRef.current.currentTime = 0;
+                      }
+                    }}
                     className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                       timerMode === 'meditation' ? 'bg-red-800 text-white shadow-md' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                     }`}
                   >
-                    Zu Chang Fa (20 min)
+                    Zu Chang Fa (19 min)
                   </button>
                 </div>
 
+                {/* REPRODUCTOR DE AUDIO CON RUTAS EXACTAS DE ARCHIVO */}
+                <div className="bg-slate-50 dark:bg-slate-900/80 p-4 rounded-2xl border border-red-100 dark:border-slate-700 space-y-2 text-left">
+                  <div className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
+                    <span className="flex items-center gap-1.5">
+                      <Headphones className="w-4 h-4 text-red-800 dark:text-red-400" />
+                      Audio Guiado: {timerMode === 'laqi' ? '05-La Qi_6min.mp3' : '02-ZuchangFa_19min.mp3'}
+                    </span>
+                  </div>
+                  <audio 
+                    ref={audioRef}
+                    controls 
+                    className="w-full h-10 rounded-xl"
+                    src={timerMode === 'laqi' ? 'audios/05-La Qi_6min.mp3' : 'audios/02-ZuchangFa_19min.mp3'}
+                  >
+                    Tu navegador no soporta la reproducción de audio.
+                  </audio>
+                </div>
+
+                {/* ANIMACIÓN DE RESPIRACIÓN Y CRONÓMETRO */}
                 <div className="relative w-60 h-60 mx-auto flex items-center justify-center">
                   <div className={`absolute inset-0 rounded-full bg-red-300/30 dark:bg-red-900/30 transition-all duration-5000 ease-in-out ${
                       timerActive && timerMode === 'laqi' && laQiPhase === 'Abrir (Kai)' ? 'scale-125 opacity-50' : 'scale-90 opacity-20'
@@ -741,18 +850,34 @@ export default function App() {
                   </div>
                 </div>
 
+                {/* BOTONES DE CONTROL */}
                 <div className="flex justify-center items-center gap-4">
                   <button
-                    onClick={() => setTimerActive(!timerActive)}
+                    onClick={() => {
+                      if (!timerActive) {
+                        setTimerActive(true);
+                        if (audioRef.current) audioRef.current.play().catch(() => {});
+                      } else {
+                        setTimerActive(false);
+                        if (audioRef.current) audioRef.current.pause();
+                      }
+                    }}
                     className={`px-8 py-3.5 rounded-2xl font-bold text-white shadow-md transition-transform hover:scale-105 flex items-center space-x-2 text-sm ${
                       timerActive ? 'bg-amber-700 hover:bg-amber-800' : 'bg-red-800 hover:bg-red-900'
                     }`}
                   >
                     {timerActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                    <span>{timerActive ? 'Pausar' : 'Comenzar Práctica'}</span>
+                    <span>{timerActive ? 'Pausar Práctica' : 'Comenzar Práctica'}</span>
                   </button>
                   <button
-                    onClick={() => { setTimerActive(false); setTimerSeconds(timerMode === 'laqi' ? 600 : 1200); }}
+                    onClick={() => {
+                      setTimerActive(false);
+                      setTimerSeconds(timerMode === 'laqi' ? 360 : 1140);
+                      if (audioRef.current) {
+                        audioRef.current.pause();
+                        audioRef.current.currentTime = 0;
+                      }
+                    }}
                     className="p-3.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-2xl transition-colors"
                   >
                     <RotateCcw className="w-4 h-4" />
@@ -959,7 +1084,7 @@ export default function App() {
                       <div>
                         <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Duración</label>
                         <select value={newDuration} onChange={e => setNewDuration(e.target.value)} className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 text-xs">
-                          <option>10 min</option><option>15 min</option><option>30 min</option><option>45 min</option>
+                          <option>6 min</option><option>10 min</option><option>15 min</option><option>19 min</option><option>30 min</option><option>45 min</option>
                         </select>
                       </div>
                     </div>
