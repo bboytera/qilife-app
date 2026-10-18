@@ -152,6 +152,20 @@ const QUOTES = [
   "Sonríe desde el corazón, relaja el entrecejo y permite que el universo trabaje en ti."
 ];
 
+// Metas para las medallas (en minutos)
+const MEDALS = [
+  { id: 1, title: 'Iniciado en el Qi', reqMins: 900, desc: '15 horas (30 min x 30 días)', icon: Star },
+  { id: 2, title: 'Buscador del Dao', reqMins: 1800, desc: '30 horas de práctica', icon: Compass },
+  { id: 3, title: 'Mente Serena', reqMins: 3000, desc: '50 horas de práctica', icon: Brain },
+  { id: 4, title: 'Corazón Puro', reqMins: 4500, desc: '75 horas de práctica', icon: Heart },
+  { id: 5, title: 'Corriente Constante', reqMins: 6000, desc: '100 horas de práctica', icon: Activity },
+  { id: 6, title: 'Fusión de los Centros', reqMins: 9000, desc: '150 horas de práctica', icon: Shield },
+  { id: 7, title: 'Qi Abundante', reqMins: 12000, desc: '200 horas de práctica', icon: Smile },
+  { id: 8, title: 'Cuerpo de Hunyuan', reqMins: 15000, desc: '250 horas de práctica', icon: Feather },
+  { id: 9, title: 'Conciencia Expandida', reqMins: 18000, desc: '300 horas de práctica', icon: Sparkles },
+  { id: 10, title: 'Maestría del Campo', reqMins: 30000, desc: '500 horas de práctica', icon: Sun }
+];
+
 export default function App() {
   // Modo oscuro
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -177,20 +191,38 @@ export default function App() {
   // Referencia para Reproductor de Audio
   const audioRef = useRef(null);
 
-  // Temporizador interactivo (19 min = 1140 seg para Zu Chang Fa por defecto, 6 min = 360 seg para La Qi)
+  // Temporizador interactivo
   const [timerActive, setTimerActive] = useState(false);
   const [timerSeconds, setTimerSeconds] = useState(1140);
   const [timerMode, setTimerMode] = useState('meditation');
   const [laQiPhase, setLaQiPhase] = useState('Abrir (Kai)');
 
-  // Bitácora personal
-  const [journalEntries, setJournalEntries] = useState([
-    { id: 1, date: '2026-10-14', practice: 'Zu Chang Fa + Peng Qi Guan Ding Fa', duration: '30 min', notes: 'Sensación intensa de calidez en la coronilla y palmas. Gran serenidad mental.' },
-    { id: 2, date: '2026-10-12', practice: 'La Qi', duration: '15 min', notes: 'Apertura de pecho y fluidez en brazos. Desapareció la tensión lumbar.' }
-  ]);
+  // BITÁCORA DINÁMICA CON LOCALSTORAGE
+  const [journalEntries, setJournalEntries] = useState(() => {
+    const saved = localStorage.getItem('qilife_journal_entries');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('qilife_journal_entries', JSON.stringify(journalEntries));
+  }, [journalEntries]);
+
   const [newNote, setNewNote] = useState('');
-  const [newPracticeName, setNewPracticeName] = useState('La Qi');
+  const [newPracticeName, setNewPracticeName] = useState('Zu Chang Fa');
   const [newDuration, setNewDuration] = useState('15 min');
+
+  // Funciones auxiliares para calcular métricas
+  const parseDurationToMinutes = (durationStr) => {
+    if (durationStr === '1 hora') return 60;
+    if (durationStr === '1 hora y media') return 90;
+    if (durationStr === '2 horas') return 120;
+    const match = durationStr.match(/\d+/);
+    return match ? parseInt(match[0], 10) : 0;
+  };
+
+  const totalSesiones = journalEntries.length;
+  const totalMinutos = journalEntries.reduce((acc, entry) => acc + parseDurationToMinutes(entry.duration), 0);
+  const diasRacha = new Set(journalEntries.map(e => e.date)).size; // Racha básica contando días únicos
 
   // Comunidad
   const [communityPosts, setCommunityPosts] = useState([
@@ -257,13 +289,19 @@ export default function App() {
   const handleAddJournalEntry = (e) => {
     e.preventDefault();
     if (!newNote.trim()) return;
+
+    // Obtener la fecha actual con el formato correcto en zona local
+    const tzOffset = (new Date()).getTimezoneOffset() * 60000;
+    const localISOTime = (new Date(Date.now() - tzOffset)).toISOString().split('T')[0];
+
     const entry = {
       id: Date.now(),
-      date: new Date().toISOString().split('T')[0],
+      date: localISOTime,
       practice: newPracticeName,
       duration: newDuration,
       notes: newNote
     };
+    // Guardar nuevo registro arriba
     setJournalEntries([entry, ...journalEntries]);
     setNewNote('');
   };
@@ -282,25 +320,19 @@ export default function App() {
     setNewPost('');
   };
 
-  // MANEJADOR DE REGISTRO CON VALIDACIONES
   const handleContactSubmit = async (e) => {
     e.preventDefault();
     setFormError('');
 
-    // 1. Validar Nombre
     if (!formData.nombre.trim() || formData.nombre.trim().length < 2) {
       setFormError('Por favor, ingresa tu nombre completo.');
       return;
     }
-
-    // 2. Validar WhatsApp (exactamente 10 dígitos)
     const cleanPhone = formData.whatsapp.replace(/\D/g, '');
     if (cleanPhone.length !== 10) {
       setFormError('El número de WhatsApp debe tener exactamente 10 dígitos (ej. 3312345678).');
       return;
     }
-
-    // 3. Validar Correo Electrónico
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(formData.email.trim())) {
       setFormError('Por favor, ingresa un correo electrónico válido (ej. correo@gmail.com).');
@@ -308,7 +340,6 @@ export default function App() {
     }
 
     setIsSubmitting(true);
-
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzHiuRh4LmFmhw1YBZJwAEnMM9AzqD_ArYkiGquyDTU9tQemYe-GChiFRjXPIkMXlQugQ/exec";
 
     try {
@@ -352,9 +383,7 @@ export default function App() {
           userText: userText
         }),
       });
-
       const data = await response.json();
-
       if (data.reply) {
         setChatMessages(prev => [...prev, { role: 'ai', text: data.reply }]);
       } else {
@@ -498,7 +527,6 @@ export default function App() {
                   </div>
                 ) : (
                   <form onSubmit={handleContactSubmit} className="space-y-3.5">
-                    {/* MENSAJE DE ERROR O ADVERTENCIA */}
                     {formError && (
                       <div className="p-2.5 bg-red-100 dark:bg-red-950/80 border border-red-300 dark:border-red-800 rounded-xl text-red-800 dark:text-red-300 text-xs font-semibold animate-fadeIn">
                         ⚠️ {formError}
@@ -715,7 +743,7 @@ export default function App() {
                   </div>
                 </div>
               </div>
-              {/* VIDEO DE YOUTUBE - CENTRO HUAXIA (DESPUÉS DE LAS FOTOS) */}
+              {/* VIDEO DE YOUTUBE - CENTRO HUAXIA */}
               <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-md border border-slate-200 dark:border-slate-700">
                 <iframe
                   className="w-full h-full"
@@ -775,7 +803,7 @@ export default function App() {
           </div>
         )}
 
-        {/* PLAN GRATIS (PRÁCTICA INTERACTIVA Y AUDIOS LIBRES) */}
+        {/* PLAN GRATIS */}
         {activeTab === 'gratis' && (
           !isRegistered ? (
             <LockedContent title="Práctica Gratuita (Zu Chang Fa y La Qi)" isEsencialOnly={false} />
@@ -784,12 +812,10 @@ export default function App() {
               <div className="text-center space-y-2">
                 <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 rounded-full text-xs font-bold uppercase tracking-wider">Plan Gratuito</span>
                 <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-serif">Zu Chang Fa y La Qi</h2>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">Sigue las instrucciones de la práctica guiada  termina el ejercicio de principio a fin intenta hacerlo lo mejor que puedas.</p>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">Sigue las instrucciones de la práctica guiada termina el ejercicio de principio a fin e intenta hacerlo lo mejor que puedas.</p>
               </div>
 
               <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-red-50 dark:border-slate-700 text-center space-y-6">
-
-                {/* SELECTOR DE MÉTODOS (Zu Chang Fa a la izquierda, La Qi a la derecha) */}
                 <div className="flex justify-center space-x-2">
                   <button
                     onClick={() => {
@@ -801,8 +827,7 @@ export default function App() {
                         audioRef.current.currentTime = 0;
                       }
                     }}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${timerMode === 'meditation' ? 'bg-red-800 text-white shadow-md' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-                      }`}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${timerMode === 'meditation' ? 'bg-red-800 text-white shadow-md' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}
                   >
                     Zu Chang Fa (19 min)
                   </button>
@@ -816,14 +841,12 @@ export default function App() {
                         audioRef.current.currentTime = 0;
                       }
                     }}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${timerMode === 'laqi' ? 'bg-red-800 text-white shadow-md' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-                      }`}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${timerMode === 'laqi' ? 'bg-red-800 text-white shadow-md' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}
                   >
                     La Qi (6 min)
                   </button>
                 </div>
 
-                {/* REPRODUCTOR DE AUDIO CON RUTAS EXACTAS DE ARCHIVO */}
                 <div className="bg-slate-50 dark:bg-slate-900/80 p-4 rounded-2xl border border-red-100 dark:border-slate-700 space-y-2 text-left">
                   <div className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
                     <span className="flex items-center gap-1.5">
@@ -841,12 +864,9 @@ export default function App() {
                   </audio>
                 </div>
 
-                {/* ANIMACIÓN DE RESPIRACIÓN Y CRONÓMETRO */}
                 <div className="relative w-60 h-60 mx-auto flex items-center justify-center">
-                  <div className={`absolute inset-0 rounded-full bg-red-300/30 dark:bg-red-900/30 transition-all duration-5000 ease-in-out ${timerActive && timerMode === 'laqi' && laQiPhase === 'Abrir (Kai)' ? 'scale-125 opacity-50' : 'scale-90 opacity-20'
-                    }`} />
-                  <div className={`w-44 h-44 rounded-full bg-gradient-to-tr from-red-900 to-amber-600 shadow-xl flex flex-col items-center justify-center text-white transition-all duration-5000 ease-in-out ${timerActive && timerMode === 'laqi' && laQiPhase === 'Abrir (Kai)' ? 'scale-105' : 'scale-95'
-                    }`}>
+                  <div className={`absolute inset-0 rounded-full bg-red-300/30 dark:bg-red-900/30 transition-all duration-5000 ease-in-out ${timerActive && timerMode === 'laqi' && laQiPhase === 'Abrir (Kai)' ? 'scale-125 opacity-50' : 'scale-90 opacity-20'}`} />
+                  <div className={`w-44 h-44 rounded-full bg-gradient-to-tr from-red-900 to-amber-600 shadow-xl flex flex-col items-center justify-center text-white transition-all duration-5000 ease-in-out ${timerActive && timerMode === 'laqi' && laQiPhase === 'Abrir (Kai)' ? 'scale-105' : 'scale-95'}`}>
                     <Sparkles className="w-6 h-6 mb-1 animate-pulse text-amber-300" />
                     <span className="text-3xl font-black tracking-wider">{formatTime(timerSeconds)}</span>
                     <span className="text-[10px] font-bold uppercase tracking-widest text-amber-100 mt-1">
@@ -855,7 +875,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* BOTONES DE CONTROL */}
                 <div className="flex justify-center items-center gap-4">
                   <button
                     onClick={() => {
@@ -867,8 +886,7 @@ export default function App() {
                         if (audioRef.current) audioRef.current.pause();
                       }
                     }}
-                    className={`px-8 py-3.5 rounded-2xl font-bold text-white shadow-md transition-transform hover:scale-105 flex items-center space-x-2 text-sm ${timerActive ? 'bg-amber-700 hover:bg-amber-800' : 'bg-red-800 hover:bg-red-900'
-                      }`}
+                    className={`px-8 py-3.5 rounded-2xl font-bold text-white shadow-md transition-transform hover:scale-105 flex items-center space-x-2 text-sm ${timerActive ? 'bg-amber-700 hover:bg-amber-800' : 'bg-red-800 hover:bg-red-900'}`}
                   >
                     {timerActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                     <span>{timerActive ? 'Pausar Práctica' : 'Comenzar Práctica'}</span>
@@ -992,7 +1010,6 @@ export default function App() {
               ))}
             </div>
 
-            {/* Modal Lector de Blog */}
             {activeBlog && (
               <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
                 <div className="bg-white dark:bg-slate-800 rounded-3xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 sm:p-8 space-y-6 shadow-2xl relative animate-fadeIn">
@@ -1028,22 +1045,22 @@ export default function App() {
           </div>
         )}
 
-        {/* MI PROGRESO */}
+        {/* MI PROGRESO (CON ESTADÍSTICAS DINÁMICAS Y MEDALLAS) */}
         {activeTab === 'evolucion' && (
           <div className="space-y-8 animate-fadeIn max-w-6xl mx-auto">
             <div className="text-center space-y-2 max-w-2xl mx-auto">
               <span className="px-3 py-1 bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 rounded-full text-xs font-bold uppercase tracking-wider">Bitácora Personal</span>
               <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-serif">Mi Progreso en Zhineng Qigong</h2>
-              <p className="text-slate-600 dark:text-slate-300 text-sm">Visualiza tus métricas de práctica constante y registra tus percepciones del flujo de Qi.</p>
+              <p className="text-slate-600 dark:text-slate-300 text-sm">Visualiza tus métricas de práctica constante y desbloquea medallas por tu dedicación al flujo de Qi.</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               {[
-                { label: 'Sesiones Totales', val: '14', icon: Activity, color: 'text-red-800 dark:text-red-400', bg: 'bg-red-100/60 dark:bg-red-950/50' },
-                { label: 'Minutos Practicados', val: '275', icon: Clock, color: 'text-amber-800 dark:text-amber-400', bg: 'bg-amber-100/60 dark:bg-amber-950/50' },
-                { label: 'Días de Racha', val: '5', icon: TrendingUp, color: 'text-rose-800 dark:text-rose-400', bg: 'bg-rose-100/60 dark:bg-rose-950/50' }
+                { label: 'Sesiones Totales', val: totalSesiones, icon: Activity, color: 'text-red-800 dark:text-red-400', bg: 'bg-red-100/60 dark:bg-red-950/50' },
+                { label: 'Minutos Practicados', val: totalMinutos, icon: Clock, color: 'text-amber-800 dark:text-amber-400', bg: 'bg-amber-100/60 dark:bg-amber-950/50' },
+                { label: 'Días de Racha', val: diasRacha, icon: TrendingUp, color: 'text-rose-800 dark:text-rose-400', bg: 'bg-rose-100/60 dark:bg-rose-950/50' }
               ].map((stat, i) => (
-                <div key={i} className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center text-center">
+                <div key={i} className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center text-center transition-all hover:shadow-md">
                   <div className={`w-12 h-12 ${stat.bg} ${stat.color} rounded-full flex items-center justify-center mb-3`}>
                     <stat.icon className="w-6 h-6" />
                   </div>
@@ -1055,20 +1072,6 @@ export default function App() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="space-y-8">
-                <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700">
-                  <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6 flex items-center font-serif"><BarChart2 className="w-5 h-5 mr-2 text-red-800 dark:text-red-400" />Frecuencia (Últimos 7 días)</h3>
-                  <div className="flex items-end justify-between h-40 space-x-2">
-                    {[30, 45, 0, 20, 60, 25, 45].map((val, i) => (
-                      <div key={i} className="flex flex-col items-center flex-1 h-full justify-end">
-                        <div className="w-full bg-red-200 dark:bg-red-950/60 rounded-t-lg relative group transition-all hover:bg-red-800" style={{ height: `${(val / 60) * 100}%`, minHeight: '6px' }}>
-                          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white text-[10px] py-0.5 px-2 rounded opacity-0 group-hover:opacity-100">{val}m</div>
-                        </div>
-                        <span className="text-[10px] text-slate-400 mt-2 font-bold uppercase">{['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa', 'Do'][i]}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
                 <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700">
                   <h3 className="text-base font-bold text-slate-800 dark:text-slate-100 mb-4 font-serif">Registrar Sesión y Sensaciones</h3>
                   <form onSubmit={handleAddJournalEntry} className="space-y-4">
@@ -1087,34 +1090,85 @@ export default function App() {
                       <div>
                         <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Duración</label>
                         <select value={newDuration} onChange={e => setNewDuration(e.target.value)} className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 text-xs">
-                          <option>6 min</option><option>10 min</option><option>15 min</option><option>19 min</option><option>30 min</option><option>45 min</option>
+                          <option>10 min</option>
+                          <option>15 min</option>
+                          <option>20 min</option>
+                          <option>30 min</option>
+                          <option>45 min</option>
+                          <option>1 hora</option>
+                          <option>1 hora y media</option>
+                          <option>2 horas</option>
                         </select>
                       </div>
                     </div>
                     <div>
                       <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Anotación sobre el Qi</label>
-                      <textarea rows="2" value={newNote} onChange={e => setNewNote(e.target.value)} placeholder="¿Qué cambios fácticos o térmicos percibiste?" className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 text-xs resize-none" />
+                      <textarea rows="2" value={newNote} onChange={e => setNewNote(e.target.value)} placeholder="¿Qué cambios físicos o emocionales percibiste?" className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 text-xs resize-none" />
                     </div>
                     <button type="submit" className="w-full py-2.5 bg-red-800 hover:bg-red-900 text-white rounded-xl text-xs font-bold transition-colors">Guardar en Registro</button>
                   </form>
                 </div>
+
+                <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700">
+                  <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6 flex items-center font-serif"><BookOpen className="w-5 h-5 mr-2 text-red-800 dark:text-red-400" />Historial de Registro</h3>
+                  <div className="space-y-4 max-h-[350px] overflow-y-auto pr-2">
+                    {journalEntries.length === 0 ? (
+                      <p className="text-xs text-slate-400 italic text-center py-8">Aún no has registrado ninguna sesión. Agrega la primera arriba.</p>
+                    ) : (
+                      journalEntries.map(entry => (
+                        <div key={entry.id} className="relative pl-6 border-l-2 border-red-100 dark:border-slate-700 pb-4 last:border-0 last:pb-0">
+                          <div className="absolute w-3 h-3 bg-red-700 rounded-full -left-[7px] top-1.5 ring-4 ring-white dark:ring-slate-800"></div>
+                          <div className="bg-slate-50 dark:bg-slate-900 rounded-2xl p-4 border border-slate-100 dark:border-slate-700">
+                            <div className="flex justify-between items-start mb-2">
+                              <span className="px-2 py-0.5 bg-red-100 dark:bg-red-950 text-red-900 dark:text-red-300 rounded-lg text-[10px] font-bold">{entry.practice}</span>
+                              <span className="text-[10px] text-slate-400 flex gap-2"><Calendar className="w-3 h-3" />{entry.date} <Clock className="w-3 h-3" />{entry.duration}</span>
+                            </div>
+                            <p className="text-slate-700 dark:text-slate-300 text-xs leading-relaxed">{entry.notes}</p>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
               </div>
 
+              {/* MEDALLAS DE PROGRESO */}
               <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700">
-                <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6 flex items-center font-serif"><BookOpen className="w-5 h-5 mr-2 text-red-800 dark:text-red-400" />Historial de Registro</h3>
-                <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
-                  {journalEntries.map(entry => (
-                    <div key={entry.id} className="relative pl-6 border-l-2 border-red-100 dark:border-slate-700 pb-4 last:border-0 last:pb-0">
-                      <div className="absolute w-3 h-3 bg-red-700 rounded-full -left-[7px] top-1.5 ring-4 ring-white dark:ring-slate-800"></div>
-                      <div className="bg-slate-50 dark:bg-slate-900 rounded-2xl p-4 border border-slate-100 dark:border-slate-700">
-                        <div className="flex justify-between items-start mb-2">
-                          <span className="px-2 py-0.5 bg-red-100 dark:bg-red-950 text-red-900 dark:text-red-300 rounded-lg text-[10px] font-bold">{entry.practice}</span>
-                          <span className="text-[10px] text-slate-400 flex gap-2"><Calendar className="w-3 h-3" />{entry.date} <Clock className="w-3 h-3" />{entry.duration}</span>
+                <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2 flex items-center font-serif">
+                  <Award className="w-5 h-5 mr-2 text-amber-600 dark:text-amber-400" /> Medallas de Constancia
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">Continúa sumando minutos en tu bitácora para ir desbloqueando los niveles de la práctica.</p>
+
+                <div className="grid grid-cols-2 gap-4">
+                  {MEDALS.map(medal => {
+                    const isUnlocked = totalMinutos >= medal.reqMins;
+                    const Icon = medal.icon;
+                    return (
+                      <div key={medal.id} className={`relative p-4 rounded-2xl border ${isUnlocked ? 'border-amber-200 bg-amber-50/50 dark:border-amber-900/50 dark:bg-amber-950/20' : 'border-slate-100 bg-slate-50/50 dark:border-slate-700 dark:bg-slate-800/50'} flex flex-col items-center text-center transition-all`}>
+                        {!isUnlocked && (
+                          <div className="absolute top-2 right-2 text-slate-300 dark:text-slate-600">
+                            <Lock className="w-3.5 h-3.5" />
+                          </div>
+                        )}
+                        <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 shadow-inner ${isUnlocked ? 'bg-gradient-to-br from-amber-300 to-amber-500 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500'}`}>
+                          <Icon className="w-6 h-6" />
                         </div>
-                        <p className="text-slate-700 dark:text-slate-300 text-xs leading-relaxed">{entry.notes}</p>
+                        <h4 className={`text-[11px] font-bold uppercase tracking-wide mb-1 ${isUnlocked ? 'text-amber-900 dark:text-amber-400' : 'text-slate-500 dark:text-slate-400'}`}>
+                          {medal.title}
+                        </h4>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400">{medal.desc}</p>
+
+                        {/* Barra de progreso */}
+                        <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mt-3 overflow-hidden">
+                          <div
+                            className={`h-full rounded-full transition-all duration-1000 ${isUnlocked ? 'bg-emerald-500' : 'bg-amber-400'}`}
+                            style={{ width: `${Math.min((totalMinutos / medal.reqMins) * 100, 100)}%` }}
+                          />
+                        </div>
+                        <p className="text-[9px] font-bold text-slate-400 mt-1">{Math.min(totalMinutos, medal.reqMins)} / {medal.reqMins} min</p>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               </div>
             </div>
@@ -1158,7 +1212,6 @@ export default function App() {
                     <p className="text-[10px] text-slate-500 dark:text-slate-400">Junto a los Maestros Karl y Helen en China</p>
                   </div>
                 </div>
-
                 <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-50 dark:bg-slate-900">
                   <img src="15.jpg" alt="Graduación de Zhineng Qigong" className="w-full h-48 object-cover" />
                   <div className="p-3">
@@ -1166,7 +1219,6 @@ export default function App() {
                     <p className="text-[10px] text-slate-500 dark:text-slate-400">Formación directa en los métodos avanzados</p>
                   </div>
                 </div>
-
                 <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-50 dark:bg-slate-900">
                   <img src="13.jpg" alt="Estancia de Formación en Beijing" className="w-full h-48 object-cover" />
                   <div className="p-3">
