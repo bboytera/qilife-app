@@ -62,7 +62,7 @@ const EXERCISES = [
     subtitle: 'Postura de Zhan Zhuang para unificar mente, cuerpo y Qi',
     duration: '15-20 min',
     level: 'Intermedio',
-    description: 'Unifica los tres centros  (centro de la cabeza, centro de las palmas y centro de las plantas de los pies) en el Dan Tien bajo para enraizar la mente y consolidar el Qi.',
+    description: 'Unifica los tres centros (centro de la cabeza, centro de las palmas y centro de las plantas de los pies) en el Dan Tien bajo para enraizar la mente y consolidar el Qi.',
     steps: [
       'Postura de pie con pies a lo ancho de hombros y rodillas ligeramente flexionadas.',
       'Palmas frente al abdomen guiando el foco hacia el centro del cuerpo.',
@@ -105,23 +105,83 @@ const EXERCISES = [
 const BLOG_POSTS = [
   {
     id: 1,
-    title: 'El Poder Transformador del Hunyuan Qi en la Vida Diaria',
+    title: '¿Qué es realmente el Qi? Más allá de la idea de "energía"',
     category: 'Filosofía',
-    date: '12 de Octubre, 2026',
+    date: '17 de Octubre, 2026',
+    readTime: '4 min de lectura',
     author: 'José Antonio Cano',
-    image: 'dr. pang y helen.jpg',
-    excerpt: 'Comprender que el Qi del universo está a disposición de nuestra mente es el primer paso hacia la autorrecuperación consciente.',
-    content: `El Dr. Pang Ming revolucionó el concepto tradicional de la medicina oriental al sintetizar la ciencia moderna con la sabiduría ancestral. El Hunyuan Qi no es solo una fuerza invisible; es la sustancia fundamental que conecta la materia, la energía y la información (Xing, Qi, Shen).
+    image: '',
+    excerpt: 'Cuando las personas se acercan por primera vez a disciplinas orientales, es habitual escuchar que traducen el Qi como "energía". Sin embargo, en Zhineng Qigong la definición es mucho más profunda.',
+    content: `Cuando las personas se acercan por primera vez a disciplinas orientales como el Qigong, es habitual que escuchen la palabra Qi traducida de forma simplificada como "energía" o "fuerza vital". Aunque esta traducción resulta práctica en una conversación informal, en el ámbito del Zhineng Qigong la definición es notablemente más profunda y completa.
 
-Cuando practicamos Zhineng Qigong, aprendemos a no depender de agentes externos para equilibrar nuestra salud. Al dirigir nuestra atención consciente (Yi Nian) hacia el estado de plenitud, el Qi fluye de forma natural disolviendo cualquier estancamiento físico o emocional.
+Para comprender verdaderamente la práctica desarrollada por el Dr. Pang Ming, es necesario explorar la Teoría del Hunyuan Qi, pilar fundamental de esta ciencia del autocultivo.
 
-Recordemos siempre la enseñanza del maestro: el cuerpo se relaja, la mente se expande y el universo nos responde.`
+El Hunyuan Qi: La integración de materia, energía e información
+
+Desde la perspectiva del Zhineng Qigong, el Hunyuan Qi no es una fuerza sutil o mística separada de la realidad física, sino la sustancia primordial y continua del universo. Todo lo que existe en la naturaleza —desde una roca hasta una célula o un pensamiento— está compuesto y atravesado por Hunyuan Qi.
+
+Esta sustancia se manifiesta en tres aspectos indisolubles conocidos como Xing, Qi y Shen:
+
+1. Materia (Xing): La forma visible, la estructura corporal y la masa física.
+2. Energía (Qi): La capacidad de transformación, movimiento e interacción entre las partes.
+3. Información (Shen): El estado, las características y la dirección que organiza a la materia y a la energía.
+
+Por lo tanto, cuando practicamos Zhineng Qigong, no estamos simplemente intentando "acumular energía" como quien carga una batería. Lo que hacemos es organizar la información de nuestro cuerpo y mente para que la materia y la energía fluyan de manera armónica.
+
+El papel central de la mente (Yi Nian)
+
+En otras corrientes tradicionales se trabaja manipulando la respiración o siguiendo trayectorias rígidas de meridianos. En Zhineng Qigong, el principio rector es claro: la mente guía al Qi (Yin Qi He Hunyuan).
+
+La mente y la conciencia (YiyuanTi) no están separadas del campo de Qi; son, de hecho, la forma más elevada y refinada de información. Cuando dirigimos nuestra atención e intención (Yi Nian) hacia el espacio infinito o hacia el interior del cuerpo, el Hunyuan Qi responde de manera inmediata a esa dirección.
+
+- Mente hacia el exterior: El Qi se expande y se conecta con la abundancia del entorno.
+- Mente hacia el interior: El Qi se reúne y penetra profundamente en los órganos, tejidos y células.
+
+Una perspectiva moderna y práctica
+
+Comprender el Qi como una combinación de materia, energía e información transforma la manera en que abordamos la salud. Un malestar o un estado de fatiga no es la "falta" de una energía misteriosa, sino una perturbación en la información y organización del cuerpo.
+
+A través de la práctica constante, aprendemos a serenar la mente, ajustar la postura física y enviar información clara de salud, equilibrio y vitalidad a cada rincón de nuestro ser.`
   },
   {
     id: 2,
+    title: 'Zhineng Qigong para la mente moderna: Cómo reducir el estrés enfocando la conciencia',
+    category: 'Práctica',
+    date: '15 de Octubre, 2026',
+    readTime: '3 min de lectura',
+    author: 'José Antonio Cano',
+    image: '',
+    excerpt: 'El estilo de vida contemporáneo somete a nuestro sistema nervioso a una sobreestimulación constante. Descubre cómo transformar el estado mental a través del enfoque de la conciencia.',
+    content: `El estilo de vida contemporáneo somete a nuestro sistema nervioso a una sobreestimulación constante. Notificaciones, interrupciones laborales, preocupaciones económicas y una lista interminable de pendientes mantienen a la mente en un estado de alerta continua. Este ritmo acelerado se traduce frecuentemente en fatiga crónica, tensión muscular e insomnio.
+
+Ante esta realidad, muchas personas buscan herramientas para recuperar la calma. Sin embargo, en Zhineng Qigong el enfoque ante el estrés es distinto: no se busca controlar forzadamente la respiración ni detener los pensamientos de forma artificial, sino transformar el estado de la mente a través del enfoque de la conciencia.
+
+La diferencia de Zhineng Qigong: Sin manipulación respiratoria
+
+A menudo se asocia la meditación o el trabajo corporal con patrones de respiración específicos. En Zhineng Qigong no se realiza control o manipulación de la respiración (Tu Na). La respiración es un proceso fisiológico autónomo que debe mantenerse natural y libre.
+
+Forzar un ritmo respiratorio cuando la mente está agitada solo genera tensión secundaria. En lugar de ello, Zhineng Qigong utiliza la intención mental (Yi Nian) para regular el estado general del organismo. Cuando la mente se enfoca y se aquieta, el ritmo respiratorio y el sistema nervioso se autorregulan por sí solos.
+
+Herramientas prácticas para la vida diaria
+
+Para aplicar el Zhineng Qigong frente al estrés cotidiano, no es necesario aislarse en una montaña ni dedicar horas a posturas complejas. Se pueden integrar principios sencillos en el día a día:
+
+1. Organización del Campo de Qi (Zu Chang Fa)
+Antes de iniciar tu jornada laboral o al terminar un día ajetreado, dedica unos minutos a organizar tu campo de Qi mentalmente. Lleva la atención a la inmensidad del espacio que te rodea, siente la serenidad del entorno y regresa esa atención al interior de tu cuerpo. Esta alternancia entre expansión y concentración restaura de inmediato el equilibrio mental.
+
+2. Recoger la atención hacia el interior
+El estrés se produce en gran medida cuando la mente se dispersa hacia el exterior en múltiples estímulos a la vez. Practicar la observación interior —sentir el cuerpo de cabeza a pies sin juzgar ni analizar— permite que la energía y la información regresen al centro, deteniendo el desgaste innecesario.
+
+De la reacción a la presencia
+
+Cultivar la serenidad mental (Tiao Xin) mediante Zhineng Qigong nos otorga un espacio entre el estímulo externo y nuestra respuesta. En lugar de reaccionar impulsivamente ante las exigencias del entorno, desarrollamos una mente clara, estable y presente, capaz de responder con ecuanimidad y eficacia.`
+  },
+  {
+    id: 3,
     title: 'Mi Experiencia de Formación con los Maestros en Beijing',
     category: 'Salud y Qi',
     date: '28 de Septiembre, 2026',
+    readTime: '4 min de lectura',
     author: 'José Antonio Cano',
     image: '13.jpg',
     excerpt: 'Reflexiones sobre la disciplina, el estudio directo y la vivencia en el corazón de China durante el proceso de certificación.',
@@ -130,16 +190,81 @@ Recordemos siempre la enseñanza del maestro: el cuerpo se relaja, la mente se e
 Allí comprendí que la técnica es solo el marco; la clave reside en la pureza de intención de la mente. El Zhineng Qigong no busca combatir la enfermedad, sino fortalecer la vida de tal manera que la desarmonía no encuentre espacio para permanecer.`
   },
   {
-    id: 3,
-    title: 'Cómo Mantener la Constancia en la Práctica Diaria',
+    id: 4,
+    title: 'Levantar y Verter el Qi (Peng Qi Guan Ding Fa): El arte de reunir la vitalidad del entorno',
     category: 'Práctica',
-    date: '15 de Septiembre, 2026',
+    date: '10 de Octubre, 2026',
+    readTime: '4 min de lectura',
     author: 'José Antonio Cano',
-    image: 'jose_practicando.jpg',
-    excerpt: 'Consejos prácticos para integrar Zu Chang Fa y La Qi en tu rutina matutina sin sentir fatiga ni presión.',
-    content: `A menudo los practicantes principiantes creen que necesitan horas libres para practicar. Sin embargo, 10 minutos de La Qi con la mente completamente serena equivalen a un incremento de vitalidad completo.
+    image: '',
+    excerpt: 'Conoce la estructura, intencionalidad y beneficios del método principal del Primer Nivel de Zhineng Qigong para interactuar con el Hunyuan Qi del universo.',
+    content: `Dentro de los métodos que conforman el sistema de Zhineng Qigong, Peng Qi Guan Ding Fa (Levantar y Verter el Qi por la Cabeza) ocupa un lugar fundamental. Es el método principal del Primer Nivel de la disciplina y constituye la puerta de entrada para aprender a interactuar conscientemente con el Hunyuan Qi del universo.
 
-Te recomiendo empezar tu mañana organizando el campo (Zu Chang Fa) antes de revisar tu teléfono o salir a tus actividades. Establecer este hábito crea un escudo de paz que te acompañará durante todo el día.`
+A diferencia de prácticas que buscan únicamente mover el Qi interno por los meridianos, este método está diseñado para intercambiar información y Qi entre el micro-universo (el ser humano) y el macro-universo (la naturaleza y el espacio infinito).
+
+La estructura del método: Movimiento e intencionalidad
+
+El método combina movimientos corporales suaves y fluidos con una dirección mental muy precisa. No se trata de un ejercicio gimnástico; cada movimiento de las manos y el cuerpo tiene un correlato directo en el enfoque de la conciencia.
+
+1. Abrir y Expandir (Kai): Las manos y la mente se dirigen hacia el espacio infinito. La mente se expande sin límites, conectando con el Hunyuan Qi puro del cosmos.
+
+2. Juntar y Traer (He): La mente regresa hacia el interior del cuerpo, trayendo esa información de abundancia, salud y armonía hacia los centros energéticos (Dantian) y a cada órgano o tejido.
+
+Mediante esta alternancia continua entre abrir y cerrar, expandir y concentrar, los poros, membranas y canales del cuerpo se abren, permitiendo que las obstrucciones se disuelvan de manera natural.
+
+Beneficios de la práctica constante de Peng Qi Guan Ding Fa
+
+La práctica regular de este método genera transformaciones profundas en el bienestar general:
+
+- Restablecimiento del nivel energético: Ayuda a superar estados de agotamiento físico y cansancio acumulado.
+- Fortalecimiento del sistema inmune: Al mejorar la circulación de Hunyuan Qi en todo el cuerpo, los mecanismos de autorregulación y defensa del organismo se optimizan.
+- Flexibilidad y apertura corporal: Los movimientos suaves liberan articulaciones, columna vertebral y zonas de tensión acumulada.
+- Claridad y serenidad mental: La sincronización entre la mente y el movimiento disipa la rumiación mental y aporta un profundo estado de tranquilidad.
+
+Un método accesible para todas las etapas
+
+Una de las grandes bondades de Peng Qi Guan Ding Fa es que puede ser adaptado a las condiciones de cualquier persona. Dado que el factor determinante es el trabajo mental y la dirección de la conciencia, el método puede practicarse de pie, sentado o incluso visualizado mentalmente en momentos de convalecencia.
+
+Es una herramienta de autocuidado sumamente valiosa para integrar la vitalidad en nuestra vida cotidiana.`
+  },
+  {
+    id: 5,
+    title: 'La ciencia detrás del estado de presencia: ¿Cómo la mente guía al cuerpo en el Qigong?',
+    category: 'Salud y Qi',
+    date: '05 de Octubre, 2026',
+    readTime: '4 min de lectura',
+    author: 'José Antonio Cano',
+    image: '',
+    excerpt: 'Durante siglos se afirmó que la mente determina la salud del cuerpo. La neurociencia, la psiconeuroinmunología y la neuroplasticidad confirman hoy estos mismos principios.',
+    content: `Durante siglos, las disciplinas de autocultivo oriental afirmaron que el estado de la mente determina la salud del cuerpo. Hoy en día, la ciencia occidental —a través de campos como la neurociencia, la psiconeuroinmunología y la neuroplasticidad— está redescubriendo y confirmando estos mismos principios.
+
+En el Zhineng Qigong, el Dr. Pang Ming formuló una explicación científica y sistemática sobre este fenómeno a través de la Teoría de la Conciencia (YiyuanTi) y el principio fundamental: la mente guía al Qi.
+
+El sistema nervioso y el estado de la mente
+
+Cuando la mente experimenta estrés, prisa o ansiedad, el cerebro activa el sistema nervioso simpático, liberando hormonas como el cortisol y la adrenalina. Esto prepara al cuerpo para la lucha o la huida, contrayendo vasos sanguíneos, aumentando la frecuencia cardíaca y suspendiendo temporalmente las funciones de reparación celular e inmunológica.
+
+Por el contrario, cuando enfocamos la mente en el presente y adoptamos una postura interior de quietud y respeto (Tiao Xin), el cerebro activa el sistema nervioso parasimpático. En este estado:
+
+- La frecuencia cardíaca y la presión arterial se estabilizan.
+- Se promueve la digestión, la regeneración celular y la respuesta inmune.
+- La química cerebral cambia hacia un estado de equilibrio y recuperación.
+
+La información como agente de cambio fisiológico
+
+En la teoría del Zhineng Qigong, la mente no es algo abstracto fuera de la realidad corporal. La mente es el nivel más elevado de organización del Hunyuan Qi.
+
+Cada pensamiento, intención o imagen mental emite una información específica. Si la información que enviamos al cuerpo es de preocupación, contracción o enfermedad, las células responden a esa señal. Si, por el contrario, mediante la práctica enfocada enviamos información de apertura, fluidez, armonía y salud, el cuerpo reorganiza sus procesos fisiológicos en respuesta a esa instrucción clara.
+
+Neuroplasticidad y entrenamiento de la atención
+
+El cerebro humano posee la capacidad de reconfigurar sus conexiones neuronales en función de las experiencias y los focos de atención repetidos (neuroplasticidad).
+
+Practicar Zhineng Qigong es, en esencia, un entrenamiento avanzado de la atención y la conciencia. Al dirigir de manera consciente y repetida la mente hacia el interior del cuerpo o hacia el espacio infinito, fortalecemos las redes neuronales asociadas con la autorregulación emocional, la concentración y la percepción corporal (interocepción).
+
+Un puente entre ciencia y experiencia personal
+
+Zhineng Qigong demuestra que la mente no es una espectadora pasiva de la salud, sino la herramienta principal para transformarla. Entender este mecanismo nos devuelve la responsabilidad y la capacidad activa sobre nuestro propio bienestar integral.`
   }
 ];
 
@@ -152,7 +277,6 @@ const QUOTES = [
   "Sonríe desde el corazón, relaja el entrecejo y permite que el universo trabaje en ti."
 ];
 
-// Metas para las medallas (en minutos)
 const MEDALS = [
   { id: 1, title: 'Iniciado en el Qi', reqMins: 900, desc: '15 horas (30 min x 30 días)', icon: Star },
   { id: 2, title: 'Buscador del Dao', reqMins: 1800, desc: '30 horas de práctica', icon: Compass },
@@ -167,7 +291,6 @@ const MEDALS = [
 ];
 
 export default function App() {
-  // Modo oscuro
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
@@ -188,16 +311,13 @@ export default function App() {
     }
   }, []);
 
-  // Referencia para Reproductor de Audio
   const audioRef = useRef(null);
 
-  // Temporizador interactivo
   const [timerActive, setTimerActive] = useState(false);
   const [timerSeconds, setTimerSeconds] = useState(1140);
   const [timerMode, setTimerMode] = useState('meditation');
   const [laQiPhase, setLaQiPhase] = useState('Abrir (Kai)');
 
-  // BITÁCORA DINÁMICA CON LOCALSTORAGE
   const [journalEntries, setJournalEntries] = useState(() => {
     const saved = localStorage.getItem('qilife_journal_entries');
     return saved ? JSON.parse(saved) : [];
@@ -211,7 +331,6 @@ export default function App() {
   const [newPracticeName, setNewPracticeName] = useState('Zu Chang Fa');
   const [newDuration, setNewDuration] = useState('15 min');
 
-  // Funciones auxiliares para calcular métricas
   const parseDurationToMinutes = (durationStr) => {
     if (durationStr === '1 hora') return 60;
     if (durationStr === '1 hora y media') return 90;
@@ -222,25 +341,21 @@ export default function App() {
 
   const totalSesiones = journalEntries.length;
   const totalMinutos = journalEntries.reduce((acc, entry) => acc + parseDurationToMinutes(entry.duration), 0);
-  const diasRacha = new Set(journalEntries.map(e => e.date)).size; // Racha básica contando días únicos
+  const diasRacha = new Set(journalEntries.map(e => e.date)).size;
 
-  // Comunidad
   const [communityPosts, setCommunityPosts] = useState([
     { id: 1, author: 'María Carmen', date: 'Hace 2 días', content: 'Llevo 3 meses practicando Peng Qi Guan Ding Fa y mis dolores de espalda han desaparecido. ¡Gracias José Antonio por tu guía, el campo de Qi es real!', likes: 14 },
     { id: 2, author: 'Roberto S.', date: 'Hace 4 días', content: 'La práctica de La Qi me ha ayudado muchísimo a controlar mi ansiedad por las noches. La comunidad de Qilife me da mucha fortaleza. Hun Yuan Ling Tong.', likes: 9 }
   ]);
   const [newPost, setNewPost] = useState('');
 
-  // Formulario y Validaciones
   const [formData, setFormData] = useState({ nombre: '', email: '', whatsapp: '' });
   const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Blog
   const [selectedBlogCategory, setSelectedBlogCategory] = useState('Todos');
   const [activeBlog, setActiveBlog] = useState(null);
 
-  // IA Chat Assistant
   const [chatMessages, setChatMessages] = useState([
     { role: 'ai', text: '¡Hola! Hun Yuan Ling Tong. Soy tu asistente inteligente de Zhineng Qigong. ¿Cómo te sientes física y emocionalmente el día de hoy?' }
   ]);
@@ -290,7 +405,6 @@ export default function App() {
     e.preventDefault();
     if (!newNote.trim()) return;
 
-    // Obtener la fecha actual con el formato correcto en zona local
     const tzOffset = (new Date()).getTimezoneOffset() * 60000;
     const localISOTime = (new Date(Date.now() - tzOffset)).toISOString().split('T')[0];
 
@@ -301,7 +415,6 @@ export default function App() {
       duration: newDuration,
       notes: newNote
     };
-    // Guardar nuevo registro arriba
     setJournalEntries([entry, ...journalEntries]);
     setNewNote('');
   };
@@ -432,7 +545,6 @@ export default function App() {
       <header className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-red-100/60 dark:border-slate-700">
         <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
 
-          {/* LOGO */}
           <div className="flex items-center space-x-3 cursor-pointer group" onClick={() => setActiveTab('home')}>
             <img
               src="logo_qilife.png"
@@ -446,7 +558,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* NAVEGACIÓN */}
           <nav className="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 bg-slate-50/80 dark:bg-slate-900/80 p-1.5 rounded-2xl border border-red-100/80 dark:border-slate-700 shadow-inner">
             {[
               { id: 'home', label: 'Inicio' },
@@ -479,7 +590,6 @@ export default function App() {
               <Bot className="w-3.5 h-3.5" /> IA
             </button>
 
-            {/* BOTÓN MODO OSCURO */}
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
               className="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-300 dark:hover:bg-slate-600 ml-1"
@@ -588,7 +698,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* Reflexión */}
             <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-red-100 dark:border-slate-700 flex items-center gap-5">
               <div className="w-12 h-12 bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400 rounded-full flex items-center justify-center shrink-0 hidden sm:flex">
                 <Sun className="w-6 h-6" />
@@ -599,7 +708,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* Tarjetas de Navegación */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
                 { tab: 'about_zq', title: '¿Qué es Zhineng Qigong?', desc: 'Conoce los principios científicos y filosóficos del Dr. Pang Ming.', icon: Info, color: 'text-amber-800 dark:text-amber-400', bg: 'bg-amber-100/70 dark:bg-amber-950/50' },
@@ -626,7 +734,6 @@ export default function App() {
               ))}
             </div>
 
-            {/* CTA Plan Esencial */}
             <div className="bg-gradient-to-r from-red-900 via-red-800 to-amber-900 rounded-3xl p-6 sm:p-8 shadow-md text-white flex flex-col sm:flex-row items-center justify-between gap-6 cursor-pointer hover:shadow-lg transition-all" onClick={() => setActiveTab('esencial')}>
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center shrink-0">
@@ -729,21 +836,21 @@ export default function App() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                 <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-slate-900">
-                  <img src="dr. pang y helen.jpg" alt="Dr. Pang Ming y Maestra Helen" className="w-full h-56 object-cover" />
+                  <img src="dr. pang y helen.jpg" alt="Dr. Pang Ming y Maestra Helen" className="w-full h-56 object-contain bg-slate-900" />
                   <div className="p-3 text-center bg-white dark:bg-slate-800">
                     <p className="text-xs font-bold text-slate-800 dark:text-slate-200">El Maestro Dr. Pang Ming con la Maestra Helen</p>
                     <p className="text-[10px] text-slate-500 dark:text-slate-400">Fundador e instructora de Zhineng Qigong</p>
                   </div>
                 </div>
                 <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-slate-900">
-                  <img src="Celebrating the Chinese New Year with Teacher Pang....jpg" alt="Primera Generación de Maestros" className="w-full h-56 object-cover" />
+                  <img src="Celebrating the Chinese New Year with Teacher Pang....jpg" alt="Primera Generación de Maestros" className="w-full h-56 object-contain bg-slate-900" />
                   <div className="p-3 text-center bg-white dark:bg-slate-800">
                     <p className="text-xs font-bold text-slate-800 dark:text-slate-200">Celebración con el Maestro Pang Ming</p>
                     <p className="text-[10px] text-slate-500 dark:text-slate-400">Primera generación de instructores de Zhineng Qigong junto al maestro Pang Ming </p>
                   </div>
                 </div>
               </div>
-              {/* VIDEO DE YOUTUBE - CENTRO HUAXIA */}
+
               <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-md border border-slate-200 dark:border-slate-700">
                 <iframe
                   className="w-full h-full"
@@ -988,12 +1095,25 @@ export default function App() {
               {filteredBlogs.map(blog => (
                 <div key={blog.id} className="bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm border border-red-50 dark:border-slate-700 flex flex-col justify-between hover:shadow-md transition-shadow">
                   <div>
-                    <div className="h-44 overflow-hidden bg-slate-100 dark:bg-slate-900 relative">
-                      <img src={blog.image} alt={blog.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-                      <span className="absolute top-3 right-3 px-2.5 py-1 bg-red-900/80 text-white rounded-full text-[10px] font-bold backdrop-blur-sm">{blog.category}</span>
-                    </div>
-                    <div className="p-6">
-                      <p className="text-[10px] text-slate-400 font-bold mb-1">{blog.date} • {blog.author}</p>
+                    {blog.image ? (
+                      <div className="h-48 overflow-hidden bg-slate-900 relative flex items-center justify-center p-2">
+                        <img src={blog.image} alt={blog.title} className="max-h-full max-w-full object-contain rounded-lg hover:scale-105 transition-transform duration-500" />
+                        <span className="absolute top-3 right-3 px-2.5 py-1 bg-red-900/90 text-white rounded-full text-[10px] font-bold backdrop-blur-sm">{blog.category}</span>
+                      </div>
+                    ) : (
+                      <div className="p-6 pb-2 flex justify-between items-center">
+                        <span className="px-2.5 py-1 bg-red-100 dark:bg-red-950 text-red-900 dark:text-red-300 rounded-full text-[10px] font-bold">{blog.category}</span>
+                      </div>
+                    )}
+
+                    <div className="p-6 pt-3">
+                      <p className="text-[10px] text-slate-400 font-bold mb-2.5 flex items-center gap-1.5 flex-wrap">
+                        <span>{blog.date}</span>
+                        <span>•</span>
+                        <span className="text-amber-700 dark:text-amber-400 flex items-center gap-1"><Clock className="w-3 h-3" />{blog.readTime}</span>
+                        <span>•</span>
+                        <span>{blog.author}</span>
+                      </p>
                       <h3 className="font-bold text-slate-800 dark:text-slate-100 text-base mb-2 font-serif leading-snug">{blog.title}</h3>
                       <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-3 leading-relaxed">{blog.excerpt}</p>
                     </div>
@@ -1023,12 +1143,20 @@ export default function App() {
                   <div className="space-y-2">
                     <span className="px-3 py-1 bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-300 rounded-full text-[10px] font-bold">{activeBlog.category}</span>
                     <h2 className="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-slate-100 font-serif leading-snug">{activeBlog.title}</h2>
-                    <p className="text-xs text-slate-400 font-semibold">{activeBlog.date} • Autor: {activeBlog.author}</p>
+                    <p className="text-xs text-slate-400 font-semibold flex items-center gap-2 flex-wrap">
+                      <span>{activeBlog.date}</span>
+                      <span>•</span>
+                      <span className="text-amber-600 dark:text-amber-400 font-bold">{activeBlog.readTime}</span>
+                      <span>•</span>
+                      <span>Autor: {activeBlog.author}</span>
+                    </p>
                   </div>
 
-                  <div className="h-60 rounded-2xl overflow-hidden">
-                    <img src={activeBlog.image} alt={activeBlog.title} className="w-full h-full object-cover" />
-                  </div>
+                  {activeBlog.image && (
+                    <div className="h-64 sm:h-80 rounded-2xl overflow-hidden bg-slate-900 flex items-center justify-center p-2 border border-slate-200 dark:border-slate-700">
+                      <img src={activeBlog.image} alt={activeBlog.title} className="max-h-full max-w-full object-contain rounded-xl" />
+                    </div>
+                  )}
 
                   <div className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line font-light">
                     {activeBlog.content}
@@ -1045,7 +1173,7 @@ export default function App() {
           </div>
         )}
 
-        {/* MI PROGRESO (CON ESTADÍSTICAS DINÁMICAS Y MEDALLAS) */}
+        {/* MI PROGRESO */}
         {activeTab === 'evolucion' && (
           <div className="space-y-8 animate-fadeIn max-w-6xl mx-auto">
             <div className="text-center space-y-2 max-w-2xl mx-auto">
@@ -1132,7 +1260,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* MEDALLAS DE PROGRESO */}
               <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700">
                 <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2 flex items-center font-serif">
                   <Award className="w-5 h-5 mr-2 text-amber-600 dark:text-amber-400" /> Medallas de Constancia
@@ -1158,7 +1285,6 @@ export default function App() {
                         </h4>
                         <p className="text-[10px] text-slate-500 dark:text-slate-400">{medal.desc}</p>
 
-                        {/* Barra de progreso */}
                         <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mt-3 overflow-hidden">
                           <div
                             className={`h-full rounded-full transition-all duration-1000 ${isUnlocked ? 'bg-emerald-500' : 'bg-amber-400'}`}
@@ -1180,7 +1306,7 @@ export default function App() {
           <div className="max-w-4xl mx-auto space-y-8 animate-fadeIn">
             <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-red-50 dark:border-slate-700 flex flex-col md:flex-row items-center gap-8">
               <div className="w-48 h-48 rounded-full overflow-hidden shrink-0 shadow-lg border-4 border-red-100 dark:border-slate-700 bg-slate-100">
-                <img src="jose_practicando.jpg" alt="José Antonio Cano Practicando" className="w-full h-full object-cover" />
+                <img src="jose_practicando.jpg" alt="José Antonio Cano Practicando" className="w-full h-full object-contain bg-slate-900" />
               </div>
               <div className="space-y-4 text-center md:text-left">
                 <div>
@@ -1205,23 +1331,23 @@ export default function App() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-50 dark:bg-slate-900">
-                  <img src="16.jpg" alt="Entrega de Certificación con Maestros Karl y Helen" className="w-full h-48 object-cover" />
-                  <div className="p-3">
+                <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-900">
+                  <img src="16.jpg" alt="Entrega de Certificación con Maestros Karl y Helen" className="w-full h-48 object-contain" />
+                  <div className="p-3 bg-white dark:bg-slate-800">
                     <p className="text-xs font-bold text-slate-800 dark:text-slate-200">Certificación de Instructor</p>
                     <p className="text-[10px] text-slate-500 dark:text-slate-400">Junto a los Maestros Karl y Helen en China</p>
                   </div>
                 </div>
-                <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-50 dark:bg-slate-900">
-                  <img src="15.jpg" alt="Graduación de Zhineng Qigong" className="w-full h-48 object-cover" />
-                  <div className="p-3">
+                <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-900">
+                  <img src="15.jpg" alt="Graduación de Zhineng Qigong" className="w-full h-48 object-contain" />
+                  <div className="p-3 bg-white dark:bg-slate-800">
                     <p className="text-xs font-bold text-slate-800 dark:text-slate-200">Graduación y Reconocimiento</p>
                     <p className="text-[10px] text-slate-500 dark:text-slate-400">Formación directa en los métodos avanzados</p>
                   </div>
                 </div>
-                <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-50 dark:bg-slate-900">
-                  <img src="13.jpg" alt="Estancia de Formación en Beijing" className="w-full h-48 object-cover" />
-                  <div className="p-3">
+                <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-900">
+                  <img src="13.jpg" alt="Estancia de Formación en Beijing" className="w-full h-48 object-contain" />
+                  <div className="p-3 bg-white dark:bg-slate-800">
                     <p className="text-xs font-bold text-slate-800 dark:text-slate-200">Estancia en Beijing</p>
                     <p className="text-[10px] text-slate-500 dark:text-slate-400">Práctica e inmersión en la Ciudad Prohibida</p>
                   </div>
