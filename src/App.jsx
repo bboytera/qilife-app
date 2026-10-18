@@ -14,39 +14,40 @@ const EXERCISES = [
     title: 'Zu Chang Fa (Organización del Campo de Qi)',
     subtitle: 'Base indispensable para toda práctica de Zhineng Qigong',
     duration: '19 min',
-    level: 'Todos los niveles',
+    level: 'Todos los niveles / Este método debe realizarse antes de cualquier otro',
     description: 'Alinear la mente con el universo y relajar profundamente el cuerpo. Establece una conexión pura con el Hunyuan Qi primordial antes de iniciar cualquier método o sanación.',
     steps: [
       'Pies juntos, cuerpo centrado y erguido, mirada al frente en el horizonte.',
       'Traer la atención lentamente al centro de la cabeza y cerrar suavemente los ojos.',
       'Apertura mental: La cabeza toca el cielo, los pies firmes en la tierra.',
+      'El cuerpo se relaja, la mente se expande ',
       'Respeto por fuera, serenidad y quietud por dentro.',
-      'Corazón puro y mente transparente, expandiendo la conciencia al universo.'
+      'Corazón puro y mente transparente, expandiendo la conciencia al universo.',
+      'Mente dentro del cuerpo y en armonía con el Hunyuan Qi',
     ],
     benefits: ['Centra la mente instantáneamente', 'Armoniza el sistema nervioso', 'Aumenta la efectividad de los ejercicios']
   },
   {
     id: 'la-qi',
-    title: 'La Qi (Abrir y Cerrar con las Manos)',
-    subtitle: 'Práctica esencial para sentir y acumular el Campo de Qi',
+    title: 'La Qi (Reunir Qi)',
+    subtitle: 'Práctica esencial para sentir y acumular el Qi',
     duration: '6 min',
     level: 'Todos los niveles',
-    description: 'Reunir Qi entre las manos mediante movimientos rítmicos de apertura (Kai) y cierre (He). Disuelve tensiones y moviliza la energía hacia los órganos.',
+    description: 'Reunir Qi entre las manos mediante movimientos rítmicos de apertura (Kai) y cierre (He). Se puede mandar Qi a una zona especifica del cuerpo.',
     steps: [
       'Sostener una esfera transparente de Qi entre las palmas frente al abdomen.',
       'Abrir (Kai): Expandir las manos sintiendo la conexión con el horizonte infinito.',
-      'Cerrar (He): Acercar las palmas sin tocarse, concentrando el Qi vital.',
-      'Sincronizar la atención con la respiración y el mantra Hun Yuan Ling Tong.'
+      'Cerrar (He): Acercar las palmas sin tocarse, concentrando el Qi entre el espacio vacio entre las manos.'
     ],
-    benefits: ['Desarrolla alta sensibilidad energética', 'Alivia dolor y tensión muscular', 'Regula la vitalidad corporal']
+    benefits: ['Desarrolla alta sensibilidad al Qi', 'Alivia dolor y tensión muscular', 'Regula la vitalidad corporal']
   },
   {
     id: 'peng-qi',
-    title: 'Peng Qi Guan Ding Fa (Levantar y Verter el Qi)',
+    title: 'Peng Qi Guan Ding Fa (Levantar y Verter el Qi por la cabeza)',
     subtitle: 'El método fundamental de Nivel 1 del Dr. Pang Ming',
     duration: '25-30 min',
     level: 'Principiante / Intermedio',
-    description: 'Intercambiar la energía del interior del cuerpo con el Hunyuan Qi del universo a través de la mente y movimientos fluidos de los brazos.',
+    description: 'Intercambiar el Qi del interior del cuerpo con el Hunyuan Qi del universo a través de la mente y movimientos fluidos de los brazos.',
     steps: [
       'Iniciar desde la posición neutra tras la Organización del Campo.',
       'Levantar el Qi por el frente, los lados y en diagonal hacia la coronilla (Baihui).',
@@ -58,17 +59,17 @@ const EXERCISES = [
   {
     id: 'san-xin',
     title: 'San Xin Bing Zhan Zhuang (Fusión de los Tres Centros)',
-    subtitle: 'Meditación de pie para unificar mente, cuerpo y Qi',
+    subtitle: 'Postura de Zhan Zhuang para unificar mente, cuerpo y Qi',
     duration: '15-20 min',
     level: 'Intermedio',
-    description: 'Unifica los tres centros energéticos (coronilla, palmas y plantas de los pies) en el Dan Tien bajo para enraizar la mente y consolidar la energía vital.',
+    description: 'Unifica los tres centros  (centro de la cabeza, centro de las palmas y centro de las plantas de los pies) en el Dan Tien bajo para enraizar la mente y consolidar el Qi.',
     steps: [
       'Postura de pie con pies a lo ancho de hombros y rodillas ligeramente flexionadas.',
       'Palmas frente al abdomen guiando el foco hacia el centro del cuerpo.',
       'Llevar la intención desde Baihui, Laogong y Yongquan hacia el Dan Tien.',
       'Sostener la postura en profunda quietud interior.'
     ],
-    benefits: ['Rejuvenece la energía profunda', 'Proporciona una calma emocional duradera', 'Fortalece la columna y piernas']
+    benefits: ['Rejuvenece la energía profunda', 'Proporciona una calma emocional duradera', 'Fortalece la columna y piernas', 'Método de transcisión']
   },
   {
     id: 'dun-qiang',
@@ -76,7 +77,7 @@ const EXERCISES = [
     subtitle: 'Transformación física y flexibilización de la columna',
     duration: '10-15 min',
     level: 'Todos los niveles',
-    description: 'Sentadillas continuas frente a una pared que estiran los ligamentos principales y desbloquean el flujo de energía a lo largo de la columna vertebral.',
+    description: 'Sentadillas continuas frente a una pared que estiran los ligamentos principales y desbloquean el flujo de Qi a lo largo de la columna vertebral.',
     steps: [
       'Ubicarse frente a una pared con pies juntos o ligeramente separados.',
       'Bajar lentamente la cadera manteniendo la espalda recta.',
@@ -88,16 +89,16 @@ const EXERCISES = [
   {
     id: 'cheng-qi',
     title: 'Cheng Qi (Extender el Qi)',
-    subtitle: 'Expansión de la energía consciente al espacio infinito',
+    subtitle: 'Expansión del Qi al espacio infinito',
     duration: '15 min',
     level: 'Intermedio / Avanzado',
     description: 'Extiende los brazos y la mente hacia el universo exterior para atraer información pura de salud y fuerza hacia nuestro campo personal.',
     steps: [
       'Proyectar las palmas y la conciencia hacia los confines del universo.',
-      'Recoger la energía luminosa atrayéndola de vuelta al abdomen.',
+      'Recoger el Qi atrayendolo de vuelta al abdomen.',
       'Integrar la información de abundancia y salud en cada célula.'
     ],
-    benefits: ['Expande el campo de salud', 'Otorga gran claridad mental', 'Fortalece los brazos y el pecho']
+    benefits: ['Expande el campo de salud', 'Otorga gran claridad mental', 'Fortalece los brazos, las escapulas y el pecho']
   }
 ];
 
@@ -109,7 +110,7 @@ const BLOG_POSTS = [
     date: '12 de Octubre, 2026',
     author: 'José Antonio Cano',
     image: 'dr. pang y helen.jpg',
-    excerpt: 'Comprender que la energía primordial del universo está a disposición de nuestra mente es el primer paso hacia la autorrecuperación consciente.',
+    excerpt: 'Comprender que el Qi del universo está a disposición de nuestra mente es el primer paso hacia la autorrecuperación consciente.',
     content: `El Dr. Pang Ming revolucionó el concepto tradicional de la medicina oriental al sintetizar la ciencia moderna con la sabiduría ancestral. El Hunyuan Qi no es solo una fuerza invisible; es la sustancia fundamental que conecta la materia, la energía y la información (Xing, Qi, Shen).
 
 Cuando practicamos Zhineng Qigong, aprendemos a no depender de agentes externos para equilibrar nuestra salud. Al dirigir nuestra atención consciente (Yi Nian) hacia el estado de plenitud, el Qi fluye de forma natural disolviendo cualquier estancamiento físico o emocional.
@@ -136,7 +137,7 @@ Allí comprendí que la técnica es solo el marco; la clave reside en la pureza 
     author: 'José Antonio Cano',
     image: 'jose_practicando.jpg',
     excerpt: 'Consejos prácticos para integrar Zu Chang Fa y La Qi en tu rutina matutina sin sentir fatiga ni presión.',
-    content: `A menudo los practicantes principiantes creen que necesitan horas libres para practicar. Sin embargo, 10 minutos de La Qi con la mente completamente serena equivalen a un renacer energético completo.
+    content: `A menudo los practicantes principiantes creen que necesitan horas libres para practicar. Sin embargo, 10 minutos de La Qi con la mente completamente serena equivalen a un incremento de vitalidad completo.
 
 Te recomiendo empezar tu mañana organizando el campo (Zu Chang Fa) antes de revisar tu teléfono o salir a tus actividades. Establecer este hábito crea un escudo de paz que te acompañará durante todo el día.`
   }
