@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Heart, Activity, BookOpen, Clock, Play, Pause, RotateCcw, 
+import {
+  Heart, Activity, BookOpen, Clock, Play, Pause, RotateCcw,
   CheckCircle, Sparkles, Volume2, Info, Calendar,
-  Sun, Headphones, Star, Video, Lock, Unlock, 
+  Sun, Headphones, Star, Video, Lock, Unlock,
   CreditCard, Send, Bot, BarChart2, TrendingUp, Users, UserCheck, MessageSquare,
   Award, Compass, MapPin, Feather, Tag, X, ChevronRight, Share2, ShieldCheck,
   Brain, Shield, Moon, Smile, RefreshCw
@@ -172,16 +172,16 @@ export default function App() {
       setIsRegistered(true);
     }
   }, []);
-  
+
   // Referencia para Reproductor de Audio
   const audioRef = useRef(null);
 
-  // Temporizador interactivo (6 min = 360 seg para La Qi, 19 min = 1140 seg para Zu Chang Fa)
+  // Temporizador interactivo (19 min = 1140 seg para Zu Chang Fa por defecto, 6 min = 360 seg para La Qi)
   const [timerActive, setTimerActive] = useState(false);
-  const [timerSeconds, setTimerSeconds] = useState(360);
-  const [timerMode, setTimerMode] = useState('laqi'); 
+  const [timerSeconds, setTimerSeconds] = useState(1140);
+  const [timerMode, setTimerMode] = useState('meditation');
   const [laQiPhase, setLaQiPhase] = useState('Abrir (Kai)');
-  
+
   // Bitácora personal
   const [journalEntries, setJournalEntries] = useState([
     { id: 1, date: '2026-10-14', practice: 'Zu Chang Fa + Peng Qi Guan Ding Fa', duration: '30 min', notes: 'Sensación intensa de calidez en la coronilla y palmas. Gran serenidad mental.' },
@@ -307,7 +307,7 @@ export default function App() {
     }
 
     setIsSubmitting(true);
-    
+
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzHiuRh4LmFmhw1YBZJwAEnMM9AzqD_ArYkiGquyDTU9tQemYe-GChiFRjXPIkMXlQugQ/exec";
 
     try {
@@ -336,7 +336,7 @@ export default function App() {
   const handleSendChatMessage = async (e) => {
     e.preventDefault();
     if (!chatInput.trim()) return;
-    
+
     const userText = chatInput;
     setChatMessages(prev => [...prev, { role: 'user', text: userText }]);
     setChatInput('');
@@ -381,7 +381,7 @@ export default function App() {
         )}
       </p>
       <div className="pt-2">
-        <button 
+        <button
           onClick={() => setActiveTab(isEsencialOnly ? 'esencial' : 'home')}
           className="px-8 py-3.5 bg-gradient-to-r from-red-800 to-red-900 hover:from-red-900 hover:to-red-950 text-white rounded-xl font-bold shadow-lg transition-transform transform hover:scale-105"
         >
@@ -391,23 +391,23 @@ export default function App() {
     </div>
   );
 
-  const filteredBlogs = selectedBlogCategory === 'Todos' 
-    ? BLOG_POSTS 
+  const filteredBlogs = selectedBlogCategory === 'Todos'
+    ? BLOG_POSTS
     : BLOG_POSTS.filter(b => b.category === selectedBlogCategory);
 
   return (
     <div className="min-h-screen bg-[#FAF7F2] dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans flex flex-col selection:bg-red-200 selection:text-red-900 transition-colors duration-300">
-      
+
       {/* HEADER / NAVEGACIÓN */}
       <header className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-red-100/60 dark:border-slate-700">
         <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
-          
+
           {/* LOGO */}
           <div className="flex items-center space-x-3 cursor-pointer group" onClick={() => setActiveTab('home')}>
-            <img 
-              src="logo_qilife.png" 
-              alt="Qilife Logo" 
-              className="w-12 h-12 object-contain group-hover:scale-105 transition-transform" 
+            <img
+              src="logo_qilife.png"
+              alt="Qilife Logo"
+              className="w-12 h-12 object-contain group-hover:scale-105 transition-transform"
               onError={(e) => { e.target.style.display = 'none'; }}
             />
             <div>
@@ -432,11 +432,10 @@ export default function App() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
-                  activeTab === tab.id
-                    ? 'bg-red-800 text-white shadow-md'
-                    : 'text-slate-600 dark:text-slate-300 hover:text-red-900 dark:hover:text-red-400 hover:bg-red-50/60 dark:hover:bg-slate-800'
-                }`}
+                className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${activeTab === tab.id
+                  ? 'bg-red-800 text-white shadow-md'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-red-900 dark:hover:text-red-400 hover:bg-red-50/60 dark:hover:bg-slate-800'
+                  }`}
               >
                 {tab.label}
               </button>
@@ -444,9 +443,8 @@ export default function App() {
 
             <button
               onClick={() => setActiveTab('ia')}
-              className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 ${
-                activeTab === 'ia' ? 'bg-amber-700 text-white shadow-md' : 'text-amber-800 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-slate-800'
-              }`}
+              className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 ${activeTab === 'ia' ? 'bg-amber-700 text-white shadow-md' : 'text-amber-800 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-slate-800'
+                }`}
             >
               <Bot className="w-3.5 h-3.5" /> IA
             </button>
@@ -465,11 +463,11 @@ export default function App() {
 
       {/* CONTENIDO PRINCIPAL */}
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-8">
-        
+
         {/* INICIO */}
         {activeTab === 'home' && (
           <div className="space-y-8 animate-fadeIn">
-            
+
             <div className="relative overflow-hidden bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-10 shadow-xl border border-red-100 dark:border-slate-700 flex flex-col lg:flex-row items-center gap-8">
               <div className="flex-1 space-y-4">
                 <span className="inline-block px-3 py-1 bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-300 rounded-full text-xs font-bold uppercase tracking-wider">
@@ -482,8 +480,8 @@ export default function App() {
                   Regístrate para recibir información y acceder al <strong>plan gratuito</strong>, donde desbloquearás la práctica interactiva de <strong>Zu Chang Fa</strong> y <strong>La Qi (audio guiado)</strong>.
                 </p>
                 <div className="flex items-center gap-4 pt-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
-                  <span className="flex items-center gap-1"><ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400"/> 100% Gratuito</span>
-                  <span className="flex items-center gap-1"><Sparkles className="w-4 h-4 text-amber-600 dark:text-amber-400"/> Sin Tarjeta</span>
+                  <span className="flex items-center gap-1"><ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> 100% Gratuito</span>
+                  <span className="flex items-center gap-1"><Sparkles className="w-4 h-4 text-amber-600 dark:text-amber-400" /> Sin Tarjeta</span>
                 </div>
               </div>
 
@@ -494,7 +492,7 @@ export default function App() {
                     <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100">¡Registro Completado!</h3>
                     <p className="text-sm text-slate-600 dark:text-slate-300">Has desbloqueado tus herramientas de práctica gratuita.</p>
                     <button onClick={() => setActiveTab('gratis')} className="w-full py-3 bg-red-800 hover:bg-red-900 text-white rounded-xl font-bold shadow-md transition-colors mt-2 text-sm">
-                      Iniciar Práctica  Zu Chang Fa y La Qi
+                      Iniciar Práctica Zu Chang Fa y La Qi
                     </button>
                   </div>
                 ) : (
@@ -508,53 +506,53 @@ export default function App() {
 
                     <div>
                       <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase">Nombre Completo</label>
-                      <input 
-                        type="text" 
-                        required 
-                        value={formData.nombre} 
+                      <input
+                        type="text"
+                        required
+                        value={formData.nombre}
                         onChange={e => {
-                          setFormData({...formData, nombre: e.target.value});
+                          setFormData({ ...formData, nombre: e.target.value });
                           if (formError) setFormError('');
-                        }} 
-                        className="w-full mt-1 px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 bg-white text-sm" 
+                        }}
+                        className="w-full mt-1 px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 bg-white text-sm"
                         placeholder="Tu nombre completo"
                       />
                     </div>
 
                     <div>
                       <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase">WhatsApp (10 dígitos)</label>
-                      <input 
-                        type="tel" 
-                        required 
+                      <input
+                        type="tel"
+                        required
                         maxLength={10}
-                        value={formData.whatsapp} 
+                        value={formData.whatsapp}
                         onChange={e => {
                           const cleanVal = e.target.value.replace(/\D/g, '');
-                          setFormData({...formData, whatsapp: cleanVal});
+                          setFormData({ ...formData, whatsapp: cleanVal });
                           if (formError) setFormError('');
-                        }} 
-                        className="w-full mt-1 px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 bg-white text-sm" 
+                        }}
+                        className="w-full mt-1 px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 bg-white text-sm"
                         placeholder="10 dígitos (ej. 3312345678)"
                       />
                     </div>
 
                     <div>
                       <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase">Correo Electrónico</label>
-                      <input 
-                        type="email" 
-                        required 
-                        value={formData.email} 
+                      <input
+                        type="email"
+                        required
+                        value={formData.email}
                         onChange={e => {
-                          setFormData({...formData, email: e.target.value});
+                          setFormData({ ...formData, email: e.target.value });
                           if (formError) setFormError('');
-                        }} 
-                        className="w-full mt-1 px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 bg-white text-sm" 
+                        }}
+                        className="w-full mt-1 px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 bg-white text-sm"
                         placeholder="tu@correo.com"
                       />
                     </div>
 
                     <button type="submit" disabled={isSubmitting} className="w-full py-3 mt-2 rounded-xl font-bold text-white bg-red-800 hover:bg-red-900 shadow-md flex justify-center items-center gap-2 transition-colors text-sm">
-                      {isSubmitting ? 'Verificando y enviando...' : <><Unlock className="w-4 h-4"/> Regístrate Gratis</>}
+                      {isSubmitting ? 'Verificando y enviando...' : <><Unlock className="w-4 h-4" /> Regístrate Gratis</>}
                     </button>
                   </form>
                 )}
@@ -580,7 +578,7 @@ export default function App() {
                 { tab: 'instructor', title: 'Acerca del Instructor', desc: 'Conoce a José Antonio Cano y su trayectoria en China.', icon: Users, color: 'text-rose-800 dark:text-rose-400', bg: 'bg-rose-100/70 dark:bg-rose-950/50' },
                 { tab: 'community', title: 'Comunidad Activa', desc: 'Descubre historias reales de sanación y cambio vital.', icon: MessageSquare, color: 'text-amber-900 dark:text-amber-300', bg: 'bg-amber-50 dark:bg-amber-950/30' }
               ].map((item, i) => (
-                <div 
+                <div
                   key={i}
                   onClick={() => setActiveTab(item.tab)}
                   className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-red-50 dark:border-slate-700 hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
@@ -629,7 +627,7 @@ export default function App() {
               <p className="text-base sm:text-lg font-serif text-red-950 dark:text-red-300 border-l-4 border-amber-600 pl-4 py-1 bg-amber-50/50 dark:bg-amber-950/30 rounded-r-xl">
                 Zhineng Qigong es una ciencia del cultivo de la salud y la conciencia desarrollada en la década de 1980 por el <strong>Dr. Pang Ming</strong>, médico formado en medicina tradicional china y medicina occidental. El término se traduce como <em>"Qigong para el desarrollo de la inteligencia y la sabiduría"</em>.
               </p>
-              
+
               <div className="text-sm space-y-4 text-slate-600 dark:text-slate-300">
                 <p>
                   A diferencia de otras ramas tradicionales o formas de ejercicio puramente físico, Zhineng Qigong se fundamenta en la <strong>Teoría del Hunyuan Qi</strong>. Desde esta perspectiva, el Qi no es una "energía" intangible o mística, sino la sustancia fundamental del universo que integra tres aspectos: <strong>materia, energía e información (Xing, Qi, Shen)</strong>.
@@ -717,18 +715,18 @@ export default function App() {
                 </div>
               </div>
               {/* VIDEO DE YOUTUBE - CENTRO HUAXIA (DESPUÉS DE LAS FOTOS) */}
-            <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-md border border-slate-200 dark:border-slate-700">
-              <iframe
-                className="w-full h-full"
-                src="https://www.youtube.com/embed/m6bvURVDutU"
-                title="Aniversario del Centro Huaxia - Zhineng Qigong"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
+              <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-md border border-slate-200 dark:border-slate-700">
+                <iframe
+                  className="w-full h-full"
+                  src="https://www.youtube.com/embed/m6bvURVDutU"
+                  title="Aniversario del Centro Huaxia - Zhineng Qigong"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
         {/* MÉTODOS */}
         {activeTab === 'exercises' && (
@@ -745,12 +743,12 @@ export default function App() {
                 <div key={index} className="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm border border-red-50 dark:border-slate-700 flex flex-col h-full hover:shadow-md transition-shadow">
                   <div className="flex justify-between items-start mb-3">
                     <span className="px-2.5 py-1 bg-red-100 dark:bg-red-950 text-red-900 dark:text-red-300 rounded-full text-[10px] font-bold">{ex.level}</span>
-                    <span className="text-xs text-slate-500 dark:text-slate-400 font-medium flex items-center gap-1"><Clock className="w-3.5 h-3.5"/>{ex.duration}</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 font-medium flex items-center gap-1"><Clock className="w-3.5 h-3.5" />{ex.duration}</span>
                   </div>
                   <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 font-serif">{ex.title}</h3>
                   <p className="text-xs font-semibold text-red-800 dark:text-red-400 mt-1 mb-3">{ex.subtitle}</p>
                   <p className="text-xs text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">{ex.description}</p>
-                  
+
                   <div className="mb-4 bg-slate-50 dark:bg-slate-900 p-3 rounded-2xl border border-slate-100 dark:border-slate-700">
                     <h4 className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-2">Pasos Clave:</h4>
                     <ul className="space-y-1">
@@ -785,44 +783,42 @@ export default function App() {
               <div className="text-center space-y-2">
                 <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 rounded-full text-xs font-bold uppercase tracking-wider">Plan Gratuito</span>
                 <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-serif">Zu Chang Fa y La Qi</h2>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">Escucha tu audio guiado y sigue el pulso respiratorio visual para sincronizar la práctica.</p>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">Sigue las instrucciones de la práctica guiada  termina el ejercicio de principio a fin intenta hacerlo lo mejor que puedas.</p>
               </div>
-              
+
               <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-red-50 dark:border-slate-700 text-center space-y-6">
-                
-                {/* SELECTOR DE MÉTODOS */}
+
+                {/* SELECTOR DE MÉTODOS (Zu Chang Fa a la izquierda, La Qi a la derecha) */}
                 <div className="flex justify-center space-x-2">
                   <button
-                    onClick={() => { 
-                      setTimerMode('laqi'); 
-                      setTimerSeconds(360); 
-                      setTimerActive(false); 
+                    onClick={() => {
+                      setTimerMode('meditation');
+                      setTimerSeconds(1140);
+                      setTimerActive(false);
                       if (audioRef.current) {
                         audioRef.current.pause();
                         audioRef.current.currentTime = 0;
                       }
                     }}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                      timerMode === 'laqi' ? 'bg-red-800 text-white shadow-md' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-                    }`}
-                  >
-                    La Qi (6 min)
-                  </button>
-                  <button
-                    onClick={() => { 
-                      setTimerMode('meditation'); 
-                      setTimerSeconds(1140); 
-                      setTimerActive(false); 
-                      if (audioRef.current) {
-                        audioRef.current.pause();
-                        audioRef.current.currentTime = 0;
-                      }
-                    }}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                      timerMode === 'meditation' ? 'bg-red-800 text-white shadow-md' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-                    }`}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${timerMode === 'meditation' ? 'bg-red-800 text-white shadow-md' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                      }`}
                   >
                     Zu Chang Fa (19 min)
+                  </button>
+                  <button
+                    onClick={() => {
+                      setTimerMode('laqi');
+                      setTimerSeconds(360);
+                      setTimerActive(false);
+                      if (audioRef.current) {
+                        audioRef.current.pause();
+                        audioRef.current.currentTime = 0;
+                      }
+                    }}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${timerMode === 'laqi' ? 'bg-red-800 text-white shadow-md' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                      }`}
+                  >
+                    La Qi (6 min)
                   </button>
                 </div>
 
@@ -831,14 +827,14 @@ export default function App() {
                   <div className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
                     <span className="flex items-center gap-1.5">
                       <Headphones className="w-4 h-4 text-red-800 dark:text-red-400" />
-                      Audio Guiado: {timerMode === 'laqi' ? '05-La Qi_6min.mp3' : '02-ZuchangFa_19min.mp3'}
+                      Audio Guiado: {timerMode === 'meditation' ? '02-ZuchangFa_19min.mp3' : '05-La Qi_6min.mp3'}
                     </span>
                   </div>
-                  <audio 
+                  <audio
                     ref={audioRef}
-                    controls 
+                    controls
                     className="w-full h-10 rounded-xl"
-                    src={timerMode === 'laqi' ? 'audios/05-La Qi_6min.mp3' : 'audios/02-ZuchangFa_19min.mp3'}
+                    src={timerMode === 'meditation' ? 'audios/02-ZuchangFa_19min.mp3' : 'audios/05-La Qi_6min.mp3'}
                   >
                     Tu navegador no soporta la reproducción de audio.
                   </audio>
@@ -846,12 +842,10 @@ export default function App() {
 
                 {/* ANIMACIÓN DE RESPIRACIÓN Y CRONÓMETRO */}
                 <div className="relative w-60 h-60 mx-auto flex items-center justify-center">
-                  <div className={`absolute inset-0 rounded-full bg-red-300/30 dark:bg-red-900/30 transition-all duration-5000 ease-in-out ${
-                      timerActive && timerMode === 'laqi' && laQiPhase === 'Abrir (Kai)' ? 'scale-125 opacity-50' : 'scale-90 opacity-20'
-                  }`} />
-                  <div className={`w-44 h-44 rounded-full bg-gradient-to-tr from-red-900 to-amber-600 shadow-xl flex flex-col items-center justify-center text-white transition-all duration-5000 ease-in-out ${
-                      timerActive && timerMode === 'laqi' && laQiPhase === 'Abrir (Kai)' ? 'scale-105' : 'scale-95'
-                  }`}>
+                  <div className={`absolute inset-0 rounded-full bg-red-300/30 dark:bg-red-900/30 transition-all duration-5000 ease-in-out ${timerActive && timerMode === 'laqi' && laQiPhase === 'Abrir (Kai)' ? 'scale-125 opacity-50' : 'scale-90 opacity-20'
+                    }`} />
+                  <div className={`w-44 h-44 rounded-full bg-gradient-to-tr from-red-900 to-amber-600 shadow-xl flex flex-col items-center justify-center text-white transition-all duration-5000 ease-in-out ${timerActive && timerMode === 'laqi' && laQiPhase === 'Abrir (Kai)' ? 'scale-105' : 'scale-95'
+                    }`}>
                     <Sparkles className="w-6 h-6 mb-1 animate-pulse text-amber-300" />
                     <span className="text-3xl font-black tracking-wider">{formatTime(timerSeconds)}</span>
                     <span className="text-[10px] font-bold uppercase tracking-widest text-amber-100 mt-1">
@@ -866,15 +860,14 @@ export default function App() {
                     onClick={() => {
                       if (!timerActive) {
                         setTimerActive(true);
-                        if (audioRef.current) audioRef.current.play().catch(() => {});
+                        if (audioRef.current) audioRef.current.play().catch(() => { });
                       } else {
                         setTimerActive(false);
                         if (audioRef.current) audioRef.current.pause();
                       }
                     }}
-                    className={`px-8 py-3.5 rounded-2xl font-bold text-white shadow-md transition-transform hover:scale-105 flex items-center space-x-2 text-sm ${
-                      timerActive ? 'bg-amber-700 hover:bg-amber-800' : 'bg-red-800 hover:bg-red-900'
-                    }`}
+                    className={`px-8 py-3.5 rounded-2xl font-bold text-white shadow-md transition-transform hover:scale-105 flex items-center space-x-2 text-sm ${timerActive ? 'bg-amber-700 hover:bg-amber-800' : 'bg-red-800 hover:bg-red-900'
+                      }`}
                   >
                     {timerActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                     <span>{timerActive ? 'Pausar Práctica' : 'Comenzar Práctica'}</span>
@@ -882,7 +875,7 @@ export default function App() {
                   <button
                     onClick={() => {
                       setTimerActive(false);
-                      setTimerSeconds(timerMode === 'laqi' ? 360 : 1140);
+                      setTimerSeconds(timerMode === 'meditation' ? 1140 : 360);
                       if (audioRef.current) {
                         audioRef.current.pause();
                         audioRef.current.currentTime = 0;
@@ -922,7 +915,7 @@ export default function App() {
                   <li className="flex items-center"><CheckCircle className="w-4 h-4 text-amber-400 mr-2.5" /> Acompañamiento en grupo exclusivo de WhatsApp</li>
                 </ul>
               </div>
-              <button 
+              <button
                 onClick={() => alert("Próximamente podrás suscribirte directamente vía Hotmart, Stripe o PayPal.")}
                 className="w-full py-3.5 rounded-xl font-bold text-slate-900 bg-gradient-to-r from-amber-300 to-amber-400 hover:from-amber-400 hover:to-amber-500 shadow-md transition-transform transform hover:scale-105 flex items-center justify-center gap-2 text-xs"
               >
@@ -962,11 +955,10 @@ export default function App() {
                 <button
                   key={cat}
                   onClick={() => setSelectedBlogCategory(cat)}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                    selectedBlogCategory === cat 
-                      ? 'bg-red-800 text-white shadow-sm' 
-                      : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-red-50 dark:hover:bg-slate-700'
-                  }`}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${selectedBlogCategory === cat
+                    ? 'bg-red-800 text-white shadow-sm'
+                    : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-red-50 dark:hover:bg-slate-700'
+                    }`}
                 >
                   {cat}
                 </button>
@@ -988,7 +980,7 @@ export default function App() {
                     </div>
                   </div>
                   <div className="px-6 pb-6 pt-0">
-                    <button 
+                    <button
                       onClick={() => setActiveBlog(blog)}
                       className="w-full py-2 bg-slate-50 dark:bg-slate-700 hover:bg-red-50 dark:hover:bg-slate-600 text-red-800 dark:text-red-300 rounded-xl text-xs font-bold transition-colors border border-slate-200 dark:border-slate-600"
                     >
@@ -1003,8 +995,8 @@ export default function App() {
             {activeBlog && (
               <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
                 <div className="bg-white dark:bg-slate-800 rounded-3xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 sm:p-8 space-y-6 shadow-2xl relative animate-fadeIn">
-                  <button 
-                    onClick={() => setActiveBlog(null)} 
+                  <button
+                    onClick={() => setActiveBlog(null)}
                     className="absolute top-4 right-4 p-2 bg-slate-100 dark:bg-slate-700 rounded-full text-slate-600 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600"
                   >
                     <X className="w-5 h-5" />
@@ -1043,7 +1035,7 @@ export default function App() {
               <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-serif">Mi Progreso en Zhineng Qigong</h2>
               <p className="text-slate-600 dark:text-slate-300 text-sm">Visualiza tus métricas de práctica constante y registra tus percepciones del flujo de Qi.</p>
             </div>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               {[
                 { label: 'Sesiones Totales', val: '14', icon: Activity, color: 'text-red-800 dark:text-red-400', bg: 'bg-red-100/60 dark:bg-red-950/50' },
@@ -1063,7 +1055,7 @@ export default function App() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="space-y-8">
                 <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700">
-                  <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6 flex items-center font-serif"><BarChart2 className="w-5 h-5 mr-2 text-red-800 dark:text-red-400"/>Frecuencia (Últimos 7 días)</h3>
+                  <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6 flex items-center font-serif"><BarChart2 className="w-5 h-5 mr-2 text-red-800 dark:text-red-400" />Frecuencia (Últimos 7 días)</h3>
                   <div className="flex items-end justify-between h-40 space-x-2">
                     {[30, 45, 0, 20, 60, 25, 45].map((val, i) => (
                       <div key={i} className="flex flex-col items-center flex-1 h-full justify-end">
@@ -1100,7 +1092,7 @@ export default function App() {
                     </div>
                     <div>
                       <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Anotación sobre el Qi</label>
-                      <textarea rows="2" value={newNote} onChange={e => setNewNote(e.target.value)} placeholder="¿Qué cambios fácticos o térmicos percibiste?" className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 text-xs resize-none"/>
+                      <textarea rows="2" value={newNote} onChange={e => setNewNote(e.target.value)} placeholder="¿Qué cambios fácticos o térmicos percibiste?" className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 text-xs resize-none" />
                     </div>
                     <button type="submit" className="w-full py-2.5 bg-red-800 hover:bg-red-900 text-white rounded-xl text-xs font-bold transition-colors">Guardar en Registro</button>
                   </form>
@@ -1108,7 +1100,7 @@ export default function App() {
               </div>
 
               <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700">
-                <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6 flex items-center font-serif"><BookOpen className="w-5 h-5 mr-2 text-red-800 dark:text-red-400"/>Historial de Registro</h3>
+                <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6 flex items-center font-serif"><BookOpen className="w-5 h-5 mr-2 text-red-800 dark:text-red-400" />Historial de Registro</h3>
                 <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
                   {journalEntries.map(entry => (
                     <div key={entry.id} className="relative pl-6 border-l-2 border-red-100 dark:border-slate-700 pb-4 last:border-0 last:pb-0">
@@ -1116,7 +1108,7 @@ export default function App() {
                       <div className="bg-slate-50 dark:bg-slate-900 rounded-2xl p-4 border border-slate-100 dark:border-slate-700">
                         <div className="flex justify-between items-start mb-2">
                           <span className="px-2 py-0.5 bg-red-100 dark:bg-red-950 text-red-900 dark:text-red-300 rounded-lg text-[10px] font-bold">{entry.practice}</span>
-                          <span className="text-[10px] text-slate-400 flex gap-2"><Calendar className="w-3 h-3"/>{entry.date} <Clock className="w-3 h-3"/>{entry.duration}</span>
+                          <span className="text-[10px] text-slate-400 flex gap-2"><Calendar className="w-3 h-3" />{entry.date} <Clock className="w-3 h-3" />{entry.duration}</span>
                         </div>
                         <p className="text-slate-700 dark:text-slate-300 text-xs leading-relaxed">{entry.notes}</p>
                       </div>
@@ -1194,17 +1186,17 @@ export default function App() {
               <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-serif">Comunidad Activa Qilife</h2>
               <p className="text-slate-600 dark:text-slate-300 text-sm">Comparte tus avances, testimonios y percepciones con otros practicantes de la red.</p>
             </div>
-            
+
             <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-red-50 dark:border-slate-700">
               <form onSubmit={handleAddPost} className="flex gap-4">
                 <div className="w-10 h-10 bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-400 rounded-full flex items-center justify-center font-bold shrink-0">
                   {formData.nombre ? formData.nombre.charAt(0).toUpperCase() : 'P'}
                 </div>
                 <div className="flex-1 space-y-3">
-                  <textarea 
-                    value={newPost} 
-                    onChange={e => setNewPost(e.target.value)} 
-                    placeholder="¿Qué cambios positivos has experimentado con tu práctica de Qi?" 
+                  <textarea
+                    value={newPost}
+                    onChange={e => setNewPost(e.target.value)}
+                    placeholder="¿Qué cambios positivos has experimentado con tu práctica de Qi?"
                     className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 text-xs resize-none"
                     rows="3"
                   />
@@ -1218,7 +1210,7 @@ export default function App() {
             <div className="space-y-4">
               {communityPosts.map(post => (
                 <div key={post.id} className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 flex gap-4">
-                   <div className="w-10 h-10 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full flex items-center justify-center font-bold shrink-0">
+                  <div className="w-10 h-10 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-full flex items-center justify-center font-bold shrink-0">
                     {post.author.charAt(0).toUpperCase()}
                   </div>
                   <div>
@@ -1238,7 +1230,6 @@ export default function App() {
         )}
 
         {/* ASISTENTE IA */}
-        {/* ASISTENTE IA */}
         {activeTab === 'ia' && (
           !isRegistered ? (
             <LockedContent title="el Asistente de IA" isEsencialOnly={false} />
@@ -1251,7 +1242,7 @@ export default function App() {
                   <p className="text-[10px] text-red-100">Guía personalizada inspirada en las enseñanzas del Dr. Pang Ming</p>
                 </div>
               </div>
-              
+
               <div className="flex-1 p-5 overflow-y-auto space-y-4 bg-slate-50/60 dark:bg-slate-900/60">
                 {chatMessages.map((msg, idx) => (
                   <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -1264,17 +1255,17 @@ export default function App() {
                   <div className="flex justify-start">
                     <div className="bg-white dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm flex gap-1.5">
                       <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{animationDelay:'0.2s'}}></div>
-                      <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{animationDelay:'0.4s'}}></div>
+                      <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                      <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
                     </div>
                   </div>
                 )}
                 <div ref={messagesEndRef} />
               </div>
-              
+
               <div className="p-3 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700">
                 <form onSubmit={handleSendChatMessage} className="flex gap-2">
-                  <input type="text" value={chatInput} onChange={e => setChatInput(e.target.value)} placeholder="Escribe tu consulta sobre la práctica..." className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 text-xs"/>
+                  <input type="text" value={chatInput} onChange={e => setChatInput(e.target.value)} placeholder="Escribe tu consulta sobre la práctica..." className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 text-xs" />
                   <button type="submit" disabled={!chatInput.trim() || isAiTyping} className="px-4 py-2.5 bg-red-800 text-white rounded-xl shadow-md hover:bg-red-900 disabled:opacity-50 flex items-center justify-center">
                     <Send className="w-4 h-4" />
                   </button>
