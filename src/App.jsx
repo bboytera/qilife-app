@@ -494,7 +494,7 @@ export default function App() {
                     <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100">¡Registro Completado!</h3>
                     <p className="text-sm text-slate-600 dark:text-slate-300">Has desbloqueado tus herramientas de práctica gratuita.</p>
                     <button onClick={() => setActiveTab('gratis')} className="w-full py-3 bg-red-800 hover:bg-red-900 text-white rounded-xl font-bold shadow-md transition-colors mt-2 text-sm">
-                      Iniciar Práctica La Qi y Zu Chang Fa
+                      Iniciar Práctica  Zu Chang Fa y La Qi
                     </button>
                   </div>
                 ) : (
@@ -705,20 +705,30 @@ export default function App() {
                   <img src="dr. pang y helen.jpg" alt="Dr. Pang Ming y Maestra Helen" className="w-full h-56 object-cover" />
                   <div className="p-3 text-center bg-white dark:bg-slate-800">
                     <p className="text-xs font-bold text-slate-800 dark:text-slate-200">El Maestro Dr. Pang Ming con la Maestra Helen</p>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400">Fundador e instructores pioneros de Zhineng Qigong</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400">Fundador e instructora de Zhineng Qigong</p>
                   </div>
                 </div>
                 <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-slate-100 dark:bg-slate-900">
                   <img src="Celebrating the Chinese New Year with Teacher Pang....jpg" alt="Primera Generación de Maestros" className="w-full h-56 object-cover" />
                   <div className="p-3 text-center bg-white dark:bg-slate-800">
                     <p className="text-xs font-bold text-slate-800 dark:text-slate-200">Celebración con el Maestro Pang Ming</p>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400">Primera generación de maestros e instructores certificados</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400">Primera generación de instructores de Zhineng Qigong junto al maestro Pang Ming </p>
                   </div>
                 </div>
               </div>
+              {/* VIDEO DE YOUTUBE - CENTRO HUAXIA (DESPUÉS DE LAS FOTOS) */}
+            <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-md border border-slate-200 dark:border-slate-700">
+              <iframe
+                className="w-full h-full"
+                src="https://www.youtube.com/embed/m6bvURVDutU"
+                title="Aniversario del Centro Huaxia - Zhineng Qigong"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
         {/* MÉTODOS */}
         {activeTab === 'exercises' && (
