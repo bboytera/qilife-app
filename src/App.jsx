@@ -8,6 +8,11 @@ import {
   Brain, Shield, Moon, Smile, RefreshCw
 } from 'lucide-react';
 
+const CHAT_API_URL = import.meta.env.VITE_CHAT_API_URL || 'https://qilife-app-ten.vercel.app/api/chat';
+const MAX_CHAT_MESSAGE_LENGTH = 2000;
+const CHAT_HISTORY_LIMIT = 8;
+const CHAT_CONNECTION_ERROR = 'No pudimos conectar con el asistente. Intenta de nuevo.';
+
 const EXERCISES = [
   {
     id: 'Zu Chang Fa',
@@ -291,14 +296,11 @@ const MEDALS = [
 ];
 
 export default function App() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('qilife_theme') === 'dark');
 
   useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    document.documentElement.classList.toggle('dark', isDarkMode);
+    localStorage.setItem('qilife_theme', isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
 
   const [activeTab, setActiveTab] = useState('home');
@@ -361,6 +363,7 @@ export default function App() {
   ]);
   const [chatInput, setChatInput] = useState('');
   const [isAiTyping, setIsAiTyping] = useState(false);
+  const [chatError, setChatError] = useState(null);
   const messagesEndRef = useRef(null);
 
   const dailyQuoteIndex = Math.floor(Date.now() / 86400000) % QUOTES.length;
@@ -371,7 +374,7 @@ export default function App() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [chatMessages]);
+  }, [chatMessages, chatError, isAiTyping]);
 
   useEffect(() => {
     let interval = null;
@@ -478,36 +481,51 @@ export default function App() {
     }
   };
 
-  const handleSendChatMessage = async (e) => {
-    e.preventDefault();
-    if (!chatInput.trim()) return;
-
-    const userText = chatInput;
-    setChatMessages(prev => [...prev, { role: 'user', text: userText }]);
-    setChatInput('');
+  const requestChatReply = async (userText, history) => {
+    const messages = history.slice(1).filter((message, index, conversation) => (
+      message.role === 'ai' || conversation[index + 1]?.role === 'ai'
+    )).slice(-CHAT_HISTORY_LIMIT);
+    setChatError(null);
     setIsAiTyping(true);
 
     try {
-      const response = await fetch('https://qilife-app-ten.vercel.app/api/chat', {
+      const response = await fetch(CHAT_API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: chatMessages,
-          userText: userText
-        }),
+        body: JSON.stringify({ messages, userText }),
+        signal: AbortSignal.timeout(28000),
       });
-      const data = await response.json();
-      if (data.reply) {
-        setChatMessages(prev => [...prev, { role: 'ai', text: data.reply }]);
-      } else {
-        setChatMessages(prev => [...prev, { role: 'ai', text: "Hun Yuan Ling Tong. Conectando nuevamente con el campo de Qi..." }]);
+      const data = await response.json().catch(() => null);
+      if (!response.ok || typeof data?.reply !== 'string' || !data.reply.trim()) {
+        setChatError({
+          message: typeof data?.error === 'string' ? data.error : CHAT_CONNECTION_ERROR,
+          retryable: data?.retryable ?? (response.ok || response.status >= 500),
+        });
+        return;
       }
-    } catch (error) {
-      console.error("Error al conectar con la IA:", error);
-      setChatMessages(prev => [...prev, { role: 'ai', text: "El campo de Qi está en reposo. Por favor, realiza una respiración profunda e intenta nuevamente." }]);
+      setChatMessages(prev => [...prev, { role: 'ai', text: data.reply }]);
+    } catch {
+      setChatError({ message: CHAT_CONNECTION_ERROR, retryable: true });
     } finally {
       setIsAiTyping(false);
     }
+  };
+
+  const handleSendChatMessage = (e) => {
+    e.preventDefault();
+    const userText = chatInput.trim();
+    if (!userText || isAiTyping) return;
+
+    setChatMessages(prev => [...prev, { role: 'user', text: userText }]);
+    setChatInput('');
+    void requestChatReply(userText, chatMessages);
+  };
+
+  const handleRetryChatMessage = () => {
+    const lastMessage = chatMessages.at(-1);
+    if (!chatError?.retryable || isAiTyping || lastMessage?.role !== 'user') return;
+
+    void requestChatReply(lastMessage.text, chatMessages.slice(0, -1));
   };
 
   const LockedContent = ({ title, isEsencialOnly = true }) => (
@@ -591,7 +609,8 @@ export default function App() {
             </button>
 
             <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
+              type="button"
+              onClick={() => setIsDarkMode(previous => !previous)}
               className="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-100 hover:bg-slate-300 dark:hover:bg-slate-600 ml-1"
             >
               {isDarkMode ? <><Sun className="w-3.5 h-3.5 text-amber-400" /> Claro</> : <><Moon className="w-3.5 h-3.5 text-slate-700 dark:text-slate-200" /> Oscuro</>}
@@ -1439,13 +1458,23 @@ export default function App() {
                     </div>
                   </div>
                 )}
+                {chatError && (
+                  <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-900 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-200">
+                    <p role="alert">{chatError.message}</p>
+                    {chatError.retryable && (
+                      <button type="button" onClick={handleRetryChatMessage} className="mt-2 font-bold underline">
+                        Reintentar
+                      </button>
+                    )}
+                  </div>
+                )}
                 <div ref={messagesEndRef} />
               </div>
 
               <div className="p-3 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700">
                 <form onSubmit={handleSendChatMessage} className="flex gap-2">
-                  <input type="text" value={chatInput} onChange={e => setChatInput(e.target.value)} placeholder="Escribe tu consulta sobre la práctica..." className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 text-xs" />
-                  <button type="submit" disabled={!chatInput.trim() || isAiTyping} className="px-4 py-2.5 bg-red-800 text-white rounded-xl shadow-md hover:bg-red-900 disabled:opacity-50 flex items-center justify-center">
+                  <input type="text" aria-label="Pregunta para el asistente" maxLength={MAX_CHAT_MESSAGE_LENGTH} value={chatInput} onChange={e => setChatInput(e.target.value)} placeholder="Escribe tu consulta sobre la práctica..." className="flex-1 min-w-0 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-red-600 text-xs" />
+                  <button type="submit" aria-label="Enviar pregunta" disabled={!chatInput.trim() || isAiTyping} className="px-4 py-2.5 bg-red-800 text-white rounded-xl shadow-md hover:bg-red-900 disabled:opacity-50 flex items-center justify-center">
                     <Send className="w-4 h-4" />
                   </button>
                 </form>
