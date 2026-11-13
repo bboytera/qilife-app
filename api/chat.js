@@ -96,10 +96,10 @@ export default async function handler(req, res) {
   if (result.status === 503) {
     await wait(500 + Math.floor(Math.random() * 300));
     result = await generateReply(model, apiKey, body);
-    if (result.status === 503 && fallbackModel !== model) {
-      const fallback = await generateReply(fallbackModel, apiKey, body);
-      if (fallback.reply || fallback.status === 422) result = fallback;
-    }
+  }
+  if ([502, 503, 504].includes(result.status) && fallbackModel !== model) {
+    const fallback = await generateReply(fallbackModel, apiKey, body);
+    if (fallback.reply || fallback.status === 422) result = fallback;
   }
 
   if (result.reply) return res.status(200).json({ reply: result.reply });
