@@ -1283,15 +1283,19 @@ export default function App() {
                 <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2 flex items-center font-serif">
                   <Award className="w-5 h-5 mr-2 text-amber-600 dark:text-amber-400" /> Medallas de Constancia
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">Continúa sumando minutos en tu bitácora para ir desbloqueando los niveles de la práctica.</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">Cada medalla se llena después de completar la anterior. Las horas de cada meta son acumuladas.</p>
 
                 <div className="grid grid-cols-2 gap-4">
-                  {MEDALS.map(medal => {
+                  {MEDALS.map((medal, index) => {
+                    const previousGoal = MEDALS[index - 1]?.reqMins ?? 0;
+                    const stageMinutes = medal.reqMins - previousGoal;
                     const isUnlocked = totalMinutos >= medal.reqMins;
+                    const isCurrent = !isUnlocked && totalMinutos >= previousGoal;
+                    const progressMinutes = Math.min(Math.max(totalMinutos - previousGoal, 0), stageMinutes);
                     const Icon = medal.icon;
                     return (
-                      <div key={medal.id} className={`relative p-4 rounded-2xl border ${isUnlocked ? 'border-amber-200 bg-amber-50/50 dark:border-amber-900/50 dark:bg-amber-950/20' : 'border-slate-100 bg-slate-50/50 dark:border-slate-700 dark:bg-slate-800/50'} flex flex-col items-center text-center transition-all`}>
-                        {!isUnlocked && (
+                      <div key={medal.id} className={`relative p-4 rounded-2xl border ${isUnlocked || isCurrent ? 'border-amber-200 bg-amber-50/50 dark:border-amber-900/50 dark:bg-amber-950/20' : 'border-slate-100 bg-slate-50/50 dark:border-slate-700 dark:bg-slate-800/50'} flex flex-col items-center text-center transition-all`}>
+                        {!isUnlocked && !isCurrent && (
                           <div className="absolute top-2 right-2 text-slate-300 dark:text-slate-600">
                             <Lock className="w-3.5 h-3.5" />
                           </div>
@@ -1304,13 +1308,15 @@ export default function App() {
                         </h4>
                         <p className="text-[10px] text-slate-500 dark:text-slate-400">{medal.desc}</p>
 
-                        <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mt-3 overflow-hidden">
+                        <div aria-hidden="true" className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mt-3 overflow-hidden">
                           <div
                             className={`h-full rounded-full transition-all duration-1000 ${isUnlocked ? 'bg-emerald-500' : 'bg-amber-400'}`}
-                            style={{ width: `${Math.min((totalMinutos / medal.reqMins) * 100, 100)}%` }}
+                            style={{ width: `${(progressMinutes / stageMinutes) * 100}%` }}
                           />
                         </div>
-                        <p className="text-[9px] font-bold text-slate-400 mt-1">{Math.min(totalMinutos, medal.reqMins)} / {medal.reqMins} min</p>
+                        <p className="text-[10px] font-bold text-slate-600 dark:text-slate-300 mt-1">
+                          {isUnlocked ? 'Desbloqueada' : isCurrent ? `En progreso · ${progressMinutes} / ${stageMinutes} min` : 'Bloqueada'}
+                        </p>
                       </div>
                     )
                   })}

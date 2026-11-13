@@ -4,6 +4,7 @@ Agrega los cambios más recientes al inicio con su fecha, los ajustes de configu
 
 ## 2026-11-12
 
+- **Mi Progreso.** Las medallas avanzan por turno. Los minutos de cada tramo llenan la medalla actual y, al desbloquearla, el excedente pasa a la siguiente. Las metas acumuladas y el historial previo se conservan. Se verificaron los límites, el excedente y el bloqueo de las medallas posteriores.
 - **Tema.** Se quitó la carga duplicada de Tailwind desde el CDN. El botón Claro/Oscuro usa el CSS compilado y recuerda la elección en el navegador.
 - **Chat.** El asistente recibe hasta cuatro intercambios anteriores como contexto. Los errores aparecen junto a la conversación y el botón «Reintentar» vuelve a enviar la misma pregunta en los casos recuperables.
 - **Disponibilidad.** Cuando Gemini devuelve un `503`, la API reintenta una vez con una pausa breve. Si persiste la saturación, se agota el tiempo de espera o falla la conexión, prueba el modelo alternativo. Un `429` muestra el aviso de límite de uso sin reintentos automáticos. Los registros incluyen el modelo y el estado HTTP sin guardar las preguntas ni la clave.
