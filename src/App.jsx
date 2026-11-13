@@ -188,7 +188,7 @@ Cultivar la serenidad mental (Tiao Xin) mediante Zhineng Qigong nos otorga un es
     date: '28 de Septiembre, 2026',
     readTime: '4 min de lectura',
     author: 'José Antonio Cano',
-    image: '13.jpg',
+    image: '',
     excerpt: 'Reflexiones sobre la disciplina, el estudio directo y la vivencia en el corazón de China durante el proceso de certificación.',
     content: `Viajar a China para recibir la certificación directa de la mano de maestros como Helen y Karl fue un punto de inflexión en mi vida. En Beijing pude respirar la fuerza colectiva de campos de Qi consolidados por décadas de práctica ininterrumpida.
 
